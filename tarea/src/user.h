@@ -4,6 +4,9 @@
 #include "user_list.h"
 #include "tweet_list.h"
 
+/**
+ * Estructura de usuario para almacenar sus datos
+ */
 typedef struct User {
     char* username;
     int hash_password;
