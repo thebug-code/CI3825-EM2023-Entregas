@@ -13,5 +13,6 @@ typedef struct User {
     tweet_node* tweet_list; // Lista enlazada donde cada nodo es un tweet
     user_node* sig_list; // Lista enlazada donde cada nodo es un usuario
 } user;
-// Falta algunas funciones aqui (verificar en el .c)
+
+user* new_user(char* username, int hash_password);
 #endif
