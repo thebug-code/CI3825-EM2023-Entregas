@@ -13,5 +13,5 @@ typedef struct Tweet_node {
 } tweet_node;
 
 tweet_node *new_tweet_list();
-u_int8_t push_tweet_list(node **head, tweet *data);
+u_int8_t push_tweet_list(tweet_node **head, tweet *data);
 #endif
