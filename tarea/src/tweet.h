@@ -3,6 +3,9 @@
 
 #include <time.h>
 
+/**
+ * Estructura Tweet para almecenar str de tweet y fecha
+ */
 typedef struct Tweet {
     char* str_tweet;
     time_t tm;
