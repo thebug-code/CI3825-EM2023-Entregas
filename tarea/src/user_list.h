@@ -8,7 +8,7 @@
  * Estructura de user nodo para lista circular doblemente enlazada
  */
 typedef struct User_node {
-    struct Node *prev, *next; // Elementos anterior y siguiente
+    struct User_node *prev, *next; // Elementos anterior y siguiente
     user *data; // Dato de nodo, de tipo user
 } user_node;
 
