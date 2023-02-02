@@ -13,6 +13,6 @@ typedef struct User_node {
 } user_node;
 
 user_node *new_user_list();
-u_int8_t push_tweet_list(node **head, user *data);
+u_int8_t push_user_list(node **head, user *data);
 
 #endif
