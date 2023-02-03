@@ -5,6 +5,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <aio.h>
 
@@ -70,6 +71,7 @@ user *get_user(user_node **hash_table, char* str) {
  * @return 1 si la operacion fue exitosa. 0 de lo contrario.
  */
 u_int8_t insert_user_hash_table(user_node ***hash_table, user *user_struct) {
+    user_node **array = *hash_table;
     u_int32_t hash = hash_code(user_struct->username);
-    return push_user_list(&(*hash_table[hash]), user_struct); /* OJO: verificar si esto en modifica la tabla de hash luego de la indercio */
+    return push_user_list(&array[hash], user_struct); 
 }
