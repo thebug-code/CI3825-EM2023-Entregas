@@ -1,5 +1,5 @@
 /**
- * Implementacion la pantalla principal de la aplicacion
+ * Implementacion de la pantalla principal de la aplicacion
  * 
  */
 #include <stdlib.h>
@@ -12,11 +12,8 @@
 
 /**
  * Muestra la pantalla principal, la cual pide los datos al usuario
- *
  * @param hash_table: tabla de hash con los usuarios
- *  
  */
-
 void main_screen(user_node **hash_table) {
     char input[7]; /* opciones de entrada */
     char username[31]; /* username del usuario */
@@ -24,7 +21,6 @@ void main_screen(user_node **hash_table) {
 
     printf("\nDON’T MISS WHAT’S HAPPENING! LOGIN, SIGNUP OR LEAVE\n\n");
     scanf("%s", input);
-
 
     /* login del programa*/
     if(!strcmp(input, "login")) {
