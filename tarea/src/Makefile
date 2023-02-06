@@ -23,3 +23,4 @@ main_screen.o: main_screen.c
 
 clean:
 	rm *.o sustituir
+
