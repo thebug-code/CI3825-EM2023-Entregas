@@ -5,7 +5,7 @@
 #include "tweet_list.h"
 
 /**
- * Crea una par donde el primer elemento es un char
+ * Crea una par donde el primer elemento es un string
  * y el segundo un tweet.
  *
  * @param first: Primer elemento del par.
