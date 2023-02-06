@@ -11,12 +11,8 @@ int main() {
 
     /*Se inicializa la tabla de hash al comenzar el programa*/
     user_node** hash_table = new_hash_table();
-    u_int8_t x;
 
-    x = main_screen(hash_table);
-
-
-
-
+    main_screen(hash_table);
+    
     return 0;
 }
