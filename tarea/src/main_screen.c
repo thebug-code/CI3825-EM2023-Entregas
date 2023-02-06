@@ -47,6 +47,7 @@ void main_screen(user_node **hash_table) {
         else {
             printf("\nEl usuario ya existe. Intente con otro usuario\n");
         }
+        main_screen(hash_table);
     }
     /* salida del programa*/
     else if(!strcmp(input, "leave")) {
