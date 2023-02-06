@@ -1,9 +1,8 @@
 /**
- * Implementacion de la lista circular, donde cada cada nodo es un
- * apuntador a struct tweet.
+ * Implementacion de la lista circular donde cada cada nodo es un
+ * apuntador a struct tweet y de las funciones auxiliares paea tweet.
  *
- * Soporta las operaciones de creacion, insercion sin orden e insercion
- * ordenada (desde el tweet mas antiguo al mas reciente).
+ * Soporta las operaciones de creacion e insercion.
  */
 
 #include <stdlib.h>
@@ -86,52 +85,4 @@ tweet* new_tweet(char* str_tweet, time_t tm) {
     tw->str_tweet = str_tweet;
     tw->tm = tm;
     return tw;
-}
-
-/*
- * Anade un tweet a la lista en orden (desde el mas antiguo al
- * mas reciente).
- *
- * @param list: apuntador a la cabeza de la lista.
- * @param tw: estructura tweet a anadir en la lista.
- * @return 1 si la operacion fue exitosa. 0 en caso contrario.
- */
-u_int8_t sorted_insert_tweet_list(tweet_node **timeline_list, tweet *tw) {
-    tweet_node *head = *timeline_list;
-
-    if (!head->data)
-        /* la lista no tiene elementos */
-        head->data = tw;
-    else if (difftime(head->data->tm, tw->tm) == 0 || difftime(head->data->tm, tw->tm) < 0) {
-        /* El tweet que esta en la cabeza de la lista fue publicado al mismo t o antes que el
-         * t del nuevo tweet a inadir */
-        tweet_node *new_node = (tweet_node*)malloc(sizeof(tweet_node));
-
-        if (!new_node) 
-            return 0;
-
-        head->prev = new_node;
-        new_node->next = head;
-        new_node->prev = NULL;
-
-        /* El nuevo nodo es la cabeza de la lista */
-        *timeline_list = new_node;
-    }
-    else {
-        /* Se recorre la lista hasta encontrar el tweet que tenga t mayor al tweet a insertar */
-        tweet_node *new_node = (tweet_node*)malloc(sizeof(tweet_node));
-        tweet_node *curr = head;
-
-        while (curr->next != NULL && difftime(curr->next->data->tm, tw->tm) > 0)
-            curr = curr->next;
-
-        new_node->next = curr->next;
-        new_node->prev = curr;
-
-        if (curr->next != NULL)
-            curr->next->prev = new_node;
-        
-        curr->next = new_node;
-    }
-    return 1;
 }
