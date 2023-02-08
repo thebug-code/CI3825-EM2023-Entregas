@@ -26,5 +26,6 @@ typedef struct User {
 user_node *new_user_list();
 u_int8_t push_user_list(user_node **head, user *data);
 user *new_user(char* username, int hash_password);
+void free_user_node(user_node* item);
 
 #endif

@@ -85,3 +85,12 @@ user* new_user(char* username, int hash_password) {
 
     return u;
 }
+
+/*
+ *  Libera un nodo de la lista enlazada de usuarios.
+ *
+ *  @param item: Apuntador al nodo a liberar.
+ */
+void free_user_node(user_node* item) {
+    free(item->data);
+}

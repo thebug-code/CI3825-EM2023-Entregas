@@ -75,3 +75,20 @@ u_int8_t insert_user_hash_table(user_node ***hash_table, user *user_struct) {
     u_int32_t hash = hash_code(user_struct->username);
     return push_user_list(&array[hash], user_struct); 
 }
+
+/*
+ * Libera todos los elementos de la tabla de hash.
+ *
+ * @param hash_table: Apuntador a la tabla de hash.
+ */
+void free_table(user_node **hash_table) {
+    int i;
+    for (i = 0; i < HASH_MAX; i++) {
+        user_node* item = hash_table[i];
+
+        if (item)
+            free_user_node(item);
+    }
+
+    free(hash_table);
+}

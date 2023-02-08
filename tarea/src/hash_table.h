@@ -15,4 +15,5 @@ user *get_user(user_node **hash_table, char *str);
 user_node **new_hash_table();
 u_int32_t hash_code(char* str);
 u_int8_t insert_user_hash_table(user_node ***hash_table, user *user_struct);
+void free_table(user_node **hash_table);
 #endif
