@@ -5,6 +5,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <aio.h>
 
@@ -50,13 +51,14 @@ u_int32_t hash_code(char *str) {
 user *get_user(user_node **hash_table, char* str) {
     u_int32_t hash = hash_code(str); /* indice donde se supone que esta el user */
     user_node *head = hash_table[hash]; /* Apuntador a la cabeza de la lista enlazada  */
-    
+
     if (!head->data)
         return NULL; /* el user no esta en la tabla de hash */
     
-    while (head) {
-        if (strcmp(str, head->data->username) == 0) 
+    while (head != NULL) {
+        if (strcmp(str, head->data->username) == 0) {
             return head->data;
+        }
         head = head->next;
     }
 
