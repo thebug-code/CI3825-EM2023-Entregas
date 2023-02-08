@@ -42,11 +42,17 @@ timeline_node *new_timeline_list() {
 u_int8_t build_timeline_list(timeline_node **timeline_list, user_node *lfu_head) {
     timeline_node *tl_head = *timeline_list;
     /* user_node *lfu_head = *list_follower_users; */
-    
+
+    if (!lfu_head->data)
+        return 1; /* El usuario no sigue a nadie */
+
     while (lfu_head != NULL) {
         /* Obtener el puntero al head de la lista de 
          * tweet de i-esimo user */
         tweet_node *tw_list_i = lfu_head->data->tweet_list;
+
+            if (!tw_list_i->data)
+                return 1; /* El usuario no a publicado tweet */
 
         /* Recorrer la lista e insertar los tweet en
          * timeline list */
@@ -74,10 +80,14 @@ void show_timeline(user_node *list_follower_users) {
     timeline_node *timeline_list = new_timeline_list(); 
     if (!timeline_list)
         exit(0);
+
     /* Construir timeline list */
     if (build_timeline_list(&timeline_list, list_follower_users) == 0)
         exit(0);
+
     /* Mostrar timeline */
+    if (!timeline_list->data)
+        return; /* No hay nada que mostrar */
     while (timeline_list != NULL) {
         printf("User @%s\n", timeline_list->data->first);
         printf("Dijo a las %s: '%s'\n", ctime(&(timeline_list->data->second->tm)), timeline_list->data->second->str_tweet);
