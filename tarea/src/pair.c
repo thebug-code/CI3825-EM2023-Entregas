@@ -23,14 +23,3 @@ pair *pair_new(char *first, tweet *second) {
 
     return p;
 }
-
-/**
- * Imprime una representacion en string del par.
- *
- * Para propositos de depuracion.
- *
- * @param pair: Apuntador a estructura pair.
- */
-void pair_print(pair *p) {
-    printf("('%s', '%s')", p->first, p->second);
-}

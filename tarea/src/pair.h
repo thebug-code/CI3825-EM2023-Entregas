@@ -13,6 +13,5 @@ typedef struct Pair {
 } pair;
 
 pair *pair_new(char *first, tweet *second);
-void pair_print(pair *pair);
 
 #endif
