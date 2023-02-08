@@ -93,4 +93,5 @@ user* new_user(char* username, int hash_password) {
  */
 void free_user_node(user_node* item) {
     free(item->data);
+    free(item);
 }
