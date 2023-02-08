@@ -91,8 +91,8 @@ void show_timeline(user_node *list_follower_users) {
  * elemento el usuario que lo publico a la lista en orden 
  * (desde el mas antiguo al mas reciente).
  *
- * @param list: apuntador a la cabeza de la timeline list.
- * @param tw: estructura pair a anadir en la lista.
+ * @param timeline_list: apuntador a la cabeza de la timeline list.
+ * @param tw_pair: estructura pair a anadir en la lista.
  * @return 1 si la operacion fue exitosa. 0 en caso contrario.
  */
 u_int8_t sorted_insert_timeline_list(timeline_node **timeline_list, pair *tw_pair) {
@@ -125,6 +125,7 @@ u_int8_t sorted_insert_timeline_list(timeline_node **timeline_list, pair *tw_pai
         while (curr->next != NULL && difftime(curr->next->data->second->tm, tw_pair->second->tm) > 0)
             curr = curr->next;
 
+        new_node->data = tw_pair;
         new_node->next = curr->next;
         new_node->prev = curr;
 
