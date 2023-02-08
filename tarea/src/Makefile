@@ -3,8 +3,8 @@ CFLAGS = -ansi -Wall -pedantic
 
 all: sustituir
 
-sustituir: main.o user_list.o tweet_list.o hash_table.o pair.o timeline.o
-	$(CC) $(CFLAGS) -o sustituir main.o user_list.o tweet_list.o hash_table.o pair.o timeline.o
+sustituir: main.o user_list.o tweet_list.o hash_table.o pair.o timeline.o main_screen.o
+	$(CC) $(CFLAGS) -o sustituir main.o user_list.o tweet_list.o hash_table.o pair.o timeline.o main_screen.o
 
 main.o: main.c
 	$(CC) $(CFLAGS) -c main.c
@@ -24,6 +24,8 @@ pair.o: pair.c
 timeline.o: timeline.c
 	$(CC) $(CFLAGS) -c timeline.c
 
+main_screen.o: main_screen.c
+	$(CC) $(CFLAGS) -c main_screen.c
+
 clean:
 	rm *.o sustituir
-
