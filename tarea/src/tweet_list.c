@@ -86,3 +86,13 @@ tweet* new_tweet(char* str_tweet, time_t tm) {
     tw->tm = tm;
     return tw;
 }
+
+/*
+ *  Libera un nodo de la lista enlazada de tweet.
+ *
+ *  @param item: Apuntador al nodo a liberar.
+ */
+void free_tweet_node(tweet_node* item) {
+    free(item->data);
+    free(item);
+}
