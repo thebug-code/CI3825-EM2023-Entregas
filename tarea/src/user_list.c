@@ -92,6 +92,14 @@ user* new_user(char* username, int hash_password) {
  *  @param item: Apuntador al nodo a liberar.
  */
 void free_user_node(user_node* item) {
+    tweet_node *tw = item->data->tweet_list;
+    tweet_node *tmp;
+    while (tw) {
+        tmp = tw->next;
+        free_tweet_node(tw);
+        tw = temp;
+    }
+        
     free(item->data);
     free(item);
 }
