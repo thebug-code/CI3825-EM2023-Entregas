@@ -51,8 +51,8 @@ u_int8_t build_timeline_list(timeline_node **timeline_list, user_node *lfu_head)
          * tweet de i-esimo user */
         tweet_node *tw_list_i = lfu_head->data->tweet_list;
 
-            if (!tw_list_i->data)
-                return 1; /* El usuario no a publicado tweet */
+        if (!tw_list_i->data)
+            return 1; /* El usuario no a publicado tweet */
 
         /* Recorrer la lista e insertar los tweet en
          * timeline list */
