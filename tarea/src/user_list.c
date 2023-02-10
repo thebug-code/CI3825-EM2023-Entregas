@@ -93,13 +93,32 @@ user* new_user(char* username, int hash_password) {
  */
 void free_user_node(user_node* item) {
     tweet_node *tw = item->data->tweet_list;
-    tweet_node *tmp;
-    while (tw) {
-        tmp = tw->next;
-        free_tweet_node(tw);
-        tw = temp;
-    }
+    user_node *u = item->data->sig_list;
+    user_node *tmp0 = NULL;
+    tweet_node *tmp1 = NULL;
         
+    if (!tw->data) 
+        free(tw);
+    else {
+        /* Recorrer la lista de tweet del usuario */
+        while (tw) {
+            tmp1 = tw->next;
+            free_tweet_node(tw);
+            tw = tmp1;
+        }
+    }
+
+    if (!u->data) 
+        free(u);
+    else {
+        /* Recorrer la lista de los siguiendo del usuario */
+        while (u) {
+            tmp0 = u->next;
+            free_user_node(u);
+            u = tmp0;
+        }
+    }
+
     free(item->data);
     free(item);
 }
