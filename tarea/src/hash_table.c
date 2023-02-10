@@ -85,11 +85,14 @@ u_int8_t insert_user_hash_table(user_node ***hash_table, user *user_struct) {
  */
 void free_table(user_node **hash_table) {
     int i;
-    for (i = 0; i < HASH_MAX; i++) {
-        user_node* item = hash_table[i];
+    user_node* item = NULL;
 
-        if (item)
+    for (i = 0; i < HASH_MAX; i++) {
+        item = hash_table[i];
+        if (item->data)
             free_user_node(item);
+        else
+            free(item);
     }
 
     free(hash_table);
