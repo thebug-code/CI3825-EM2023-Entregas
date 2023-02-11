@@ -40,7 +40,6 @@ timeline_node *new_timeline_list() {
  * @return 1 si la operacion fue exitosa. 0 en caso contrario.
  */
 u_int8_t build_timeline_list(timeline_node **timeline_list, user_node *lfu_head) {
-    timeline_node *tl_head = *timeline_list;
     
     if (!lfu_head->data)
         return 1; /* El usuario no sigue a nadie */
