@@ -24,5 +24,5 @@ tweet* new_tweet(char* tweet, time_t tm);
 tweet_node *new_tweet_list();
 u_int8_t push_tweet_list(tweet_node **head, tweet *data);
 void free_tweet_node(tweet_node* item);
-
+void show_tweet_list(tweet_node *list);
 #endif
