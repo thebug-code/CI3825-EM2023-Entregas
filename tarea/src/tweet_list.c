@@ -6,7 +6,9 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
+#include <string.h>
 
 #include "user_list.h"
 #include "tweet_list.h"
@@ -63,6 +65,7 @@ u_int8_t push_tweet_list(tweet_node **list, tweet *data) {
         /* head es el ultimo nodo de la lista enlazada */
         head->next = new_node;
         new_node->prev = head;
+        new_node->next = NULL;
     }
 
     return 1;
@@ -85,6 +88,24 @@ tweet* new_tweet(char* str_tweet, time_t tm) {
     tw->str_tweet = str_tweet;
     tw->tm = tm;
     return tw;
+}
+
+/* Muestra en pantalla los str tweet de un usuario 
+ *
+ * @paran list: puntero a la cabeza de la lista con los tweet
+ * del usuario.
+ */
+void show_tweet_list(tweet_node *list) {
+    if (!list->data) 
+        return;
+
+    while (list) {
+        char *t = ctime(&list->data->tm);
+        printf("Dijo a las %.*s: %s\n", (int)strlen(t)-1, t, list->data->str_tweet);
+        list = list->next;
+        printf("%d\n", list == NULL);
+    }
+    return;
 }
 
 /*
