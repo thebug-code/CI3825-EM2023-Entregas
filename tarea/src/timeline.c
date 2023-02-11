@@ -41,12 +41,11 @@ timeline_node *new_timeline_list() {
  */
 u_int8_t build_timeline_list(timeline_node **timeline_list, user_node *lfu_head) {
     timeline_node *tl_head = *timeline_list;
-    /* user_node *lfu_head = *list_follower_users; */
-
+    
     if (!lfu_head->data)
         return 1; /* El usuario no sigue a nadie */
 
-    while (lfu_head != NULL) {
+    while (lfu_head) {
         /* Obtener el puntero al head de la lista de 
          * tweet de i-esimo user */
         tweet_node *tw_list_i = lfu_head->data->tweet_list;
@@ -56,12 +55,12 @@ u_int8_t build_timeline_list(timeline_node **timeline_list, user_node *lfu_head)
 
         /* Recorrer la lista e insertar los tweet en
          * timeline list */
-        while (tw_list_i != NULL) {
+        while (tw_list_i) {
             /* crear par del i-esimo tweet */
             pair *p_i = pair_new(lfu_head->data->username, tw_list_i->data);
             if (!p_i)
                 return 0;
-            if (sorted_insert_timeline_list(&tl_head, p_i) == 0)
+            if (sorted_insert_timeline_list(timeline_list, p_i) == 0)
                 return 0; /* ocurrio un error */
             tw_list_i = tw_list_i->next;
         }
@@ -88,6 +87,7 @@ void show_timeline(user_node *list_follower_users) {
     /* Mostrar timeline */
     if (!timeline_list->data)
         return; /* No hay nada que mostrar */
+
     while (timeline_list != NULL) {
         printf("User @%s\n", timeline_list->data->first);
         printf("Dijo a las %s: '%s'\n", ctime(&(timeline_list->data->second->tm)), timeline_list->data->second->str_tweet);
@@ -108,9 +108,10 @@ void show_timeline(user_node *list_follower_users) {
 u_int8_t sorted_insert_timeline_list(timeline_node **timeline_list, pair *tw_pair) {
     timeline_node *head = *timeline_list;
 
-    if (!head->data)
+    if (!head->data) {
         /* la lista no tiene elementos */
         head->data = tw_pair;
+    }
     else if (difftime(head->data->second->tm, tw_pair->second->tm) == 0 || difftime(head->data->second->tm, tw_pair->second->tm) < 0) {
         /* El tweet que esta en la cabeza de la lista fue publicado al mismo t o antes que el
          * t del nuevo nodo*/
@@ -119,11 +120,13 @@ u_int8_t sorted_insert_timeline_list(timeline_node **timeline_list, pair *tw_pai
         if (!new_node)
             return 0;
 
+        /* Coloca el pair en el nodo */
         new_node->data = tw_pair;
-        head->prev = new_node;
+
         new_node->next = head;
         new_node->prev = NULL;
-
+        head->prev = new_node;
+    
         /* El nuevo nodo es la cabeza de la lista */
         *timeline_list = new_node;
     }
