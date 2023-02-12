@@ -1,13 +1,14 @@
 /**
- * Implementacion de la lista circular, donde cada cada nodo es un
- * apuntador a struct tweet.
+ * Implementacion de la lista circular donde cada cada nodo es un
+ * apuntador a struct tweet y de las funciones auxiliares paea tweet.
  *
- * Soporta las operaciones de creacion, insercion sin orden e insercion
- * ordenada (desde el tweet mas antiguo al mas reciente).
+ * Soporta las operaciones de creacion e insercion.
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
+#include <string.h>
 
 #include "user_list.h"
 #include "tweet_list.h"
@@ -56,14 +57,14 @@ u_int8_t push_tweet_list(tweet_node **list, tweet *data) {
 
         /* Coloca el dato en el nodo */
         new_node->data = data;
-        
-        /* Recorre la lista enlazada hasta el final */
-        while (head->next)
-            head = head->next;
 
         /* head es el ultimo nodo de la lista enlazada */
-        head->next = new_node;
-        new_node->prev = head;
+        head->prev = new_node;
+        new_node->prev = NULL;
+        new_node->next = head;
+
+        /* El nuevo node es la cabeza de la lista */
+        *list = new_node;
     }
 
     return 1;
@@ -88,50 +89,37 @@ tweet* new_tweet(char* str_tweet, time_t tm) {
     return tw;
 }
 
-/*
- * Anade un tweet a la lista en orden (desde el mas antiguo al
- * mas reciente).
+/* Muestra en pantalla los str tweet de un usuario 
  *
- * @param list: apuntador a la cabeza de la lista.
- * @param tw: estructura tweet a anadir en la lista.
- * @return 1 si la operacion fue exitosa. 0 en caso contrario.
+ * @paran list: puntero a la cabeza de la lista con los tweet
+ * del usuario.
  */
-u_int8_t sorted_insert_tweet_list(tweet_node **timeline_list, tweet *tw) {
-    tweet_node *head = *timeline_list;
-
-    if (!head->data)
-        /* la lista no tiene elementos */
-        head->data = tw;
-    else if (difftime(head->data->tm, tw->tm) == 0 || difftime(head->data->tm, tw->tm) < 0) {
-        /* El tweet que esta en la cabeza de la lista fue publicado al mismo t o antes que el
-         * t del nuevo tweet a inadir */
-        tweet_node *new_node = (tweet_node*)malloc(sizeof(tweet_node));
-
-        if (!new_node) 
-            return 0;
-
-        head->prev = new_node;
-        new_node->next = head;
-        new_node->prev = NULL;
-
-        /* El nuevo nodo es la cabeza de la lista */
-        *timeline_list = new_node;
+void show_tweet_list(tweet_node *list, char *username) {
+    if (!list->data) {
+        printf("No hay tweets para mostrar\n");
+        return;
     }
-    else {
-        /* Se recorre la lista hasta encontrar el tweet que tenga t mayor al tweet a insertar */
-        tweet_node *new_node = (tweet_node*)malloc(sizeof(tweet_node));
-        tweet_node *curr = head;
 
-        while (curr->next != NULL && difftime(curr->next->data->tm, tw->tm) > 0)
-            curr = curr->next;
+    /* Recorre la lista enlazada hasta el final */
+    while (list->next)
+        list = list->next;
 
-        new_node->next = curr->next;
-        new_node->prev = curr;
-
-        if (curr->next != NULL)
-            curr->next->prev = new_node;
-        
-        curr->next = new_node;
+    printf("@%s\n", username);
+    while (list) {
+        char *t = ctime(&list->data->tm);
+        printf("Dijo a las %.*s: %s\n", (int)strlen(t)-1, t, list->data->str_tweet);
+        printf("------------------------------------\n");
+        list = list->prev;
     }
-    return 1;
+    return;
+}
+
+/*
+ *  Libera un nodo de la lista enlazada de tweet.
+ *
+ *  @param item: Apuntador al nodo a liberar.
+ */
+void free_tweet_node(tweet_node* item) {
+    free(item->data);
+    free(item);
 }
