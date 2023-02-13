@@ -57,15 +57,13 @@ u_int8_t push_tweet_list(tweet_node **list, tweet *data) {
 
         /* Coloca el dato en el nodo */
         new_node->data = data;
-        
-        /* Recorre la lista enlazada hasta el final */
-        while (head->next)
-            head = head->next;
 
-        /* head es el ultimo nodo de la lista enlazada */
-        head->next = new_node;
-        new_node->prev = head;
-        new_node->next = NULL;
+        head->prev = new_node;
+        new_node->prev = NULL;
+        new_node->next = head;
+
+        /* El nuevo node es la cabeza de la lista */
+        *list = new_node;
     }
 
     return 1;
@@ -95,15 +93,22 @@ tweet* new_tweet(char* str_tweet, time_t tm) {
  * @paran list: puntero a la cabeza de la lista con los tweet
  * del usuario.
  */
-void show_tweet_list(tweet_node *list) {
-    if (!list->data) 
+void show_tweet_list(tweet_node *list, char *username) {
+    if (!list->data) {
+        printf("No hay tweets para mostrar\n");
         return;
+    }
 
+    /* Recorre la lista enlazada hasta el final */
+    while (list->next)
+        list = list->next;
+
+    printf("@%s\n", username);
     while (list) {
         char *t = ctime(&list->data->tm);
         printf("Dijo a las %.*s: %s\n", (int)strlen(t)-1, t, list->data->str_tweet);
-        list = list->next;
-        printf("%d\n", list == NULL);
+        printf("------------------------------------\n");
+        list = list->prev;
     }
     return;
 }

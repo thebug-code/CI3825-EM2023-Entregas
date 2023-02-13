@@ -110,14 +110,22 @@ void screen3(user_node **hash_table, user **u, user *to_user) {
         }
         else {
             /* Mostrar tweet del usuario */
-            show_tweet_list(stalkear_user->tweet_list);
+            printf("\nDescripcion: %s\n\n", stalkear_user->description);
+            show_user_list(stalkear_user->sig_list);
+            show_tweet_list(stalkear_user->tweet_list, stalkear_user->username);
             screen3(hash_table, u, stalkear_user);
         }
     }
     else if (to_user && !strcmp(input, "follow")) {
-        push_user_list(&struct_user->sig_list, to_user);
-        printf("\nComenzo a seguir a @%s\n", to_user->username); /* OJO VERIFICAR si es NULL en la llamada*/
-        screen3(hash_table, u, NULL);
+        if(!get_user_list(struct_user->sig_list, to_user->username)) {
+            push_user_list(&struct_user->sig_list, to_user);
+            printf("\nComenzo a seguir a @%s\n", to_user->username);
+            screen3(hash_table, u, NULL);
+        }
+        else {
+            printf("\nYa sigue al usuario @%s\n", to_user->username);
+            screen3(hash_table, u, NULL);
+        }
     }
     else if (!strcmp(input, "logout"))
         return;
@@ -137,13 +145,15 @@ void screen3(user_node **hash_table, user **u, user *to_user) {
 void screen4(user_node **hash_table) {
     char *username = malloc(31 * sizeof(char)); /* username del usuario */
     char *password = malloc(16 * sizeof(char)); /* password del usuario */
+    char *description = malloc(65 * sizeof(char)); /* descripcion del perfil */
 
     read_user_and_pass(&username, &password);
+    put_description(&description);
      
      /* Se agrega, en caso contrario se solicita otro username */
     if (!get_user(hash_table, username)) {
-        insert_user_hash_table(&hash_table, new_user(username, hash_code(password)));           
-        printf("\nRegistro exitoso.\n");
+        insert_user_hash_table(&hash_table, new_user(username, hash_code(password), description));           
+        printf("Registro exitoso.\n");
         return;
     }
     else {
@@ -184,8 +194,18 @@ void read_user_and_pass(char **u, char **p) {
     fflush(stdin);
     fgets(password, 16, stdin); 
     clear_string(&password);
+    printf("\n");
 
     return; 
+}
+
+void put_description(char **d) {
+    char *description = *d;
+    printf("DESCRIPTION: ");
+    fflush(stdin);
+    fgets(description, 65, stdin);
+    clear_string(&description);
+    printf("\n");
 }
 
 /* Remove trailing newline, if there. */

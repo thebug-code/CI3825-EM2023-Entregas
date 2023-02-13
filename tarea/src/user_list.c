@@ -6,6 +6,9 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
 #include "user_list.h"
 #include "tweet_list.h"
 
@@ -64,6 +67,30 @@ u_int8_t push_user_list(user_node **list, user *data) {
     return 1;
 }
 
+/**
+ * Buscar un usuario en la lista de usuarios 
+ *
+ * @param user_table: lista con los usuarios seguidos.
+ * @param str: apuntador al username del usuario.
+ * @return apuntador a structura tipo usuario, si el usuario
+ * esta en la tabla de hash. NULL en caso contrario.
+ */
+user *get_user_list(user_node *user_list, char* str) {
+    user_node *head = user_list; /* Apuntador a la cabeza de la lista enlazada  */
+
+    if (!head->data)
+        return NULL; /* el user no esta en la lista */
+    
+    while (head != NULL) {
+        if (strcmp(str, head->data->username) == 0) {
+            return head->data;
+        }
+        head = head->next;
+    }
+
+    return NULL;
+}
+
 /*
  * Crea una structura user
  *
@@ -72,7 +99,7 @@ u_int8_t push_user_list(user_node **list, user *data) {
  * @return Un apuntador a User si la creacion fue exitosa.
  *         NULL en caso contrario.
  */
-user* new_user(char* username, int hash_password) {
+user* new_user(char* username, int hash_password, char* description) {
     user *u = malloc(sizeof(user));
 
     if (!u)
@@ -80,6 +107,7 @@ user* new_user(char* username, int hash_password) {
 
     u->username = username;
     u->hash_password = hash_password;
+    u->description = description;
     u->tweet_list = new_tweet_list(); /* Crear lista de tweets */
     u->sig_list = new_user_list(); /* Crear lista de users */
 
@@ -121,4 +149,27 @@ void free_user_node(user_node* item) {
 
     free(item->data);
     free(item);
+}
+
+/* Muestra en pantalla a los usuarios seguidos
+ *
+ * @paran list: puntero a la cabeza de la lista con los usuarios.
+ */
+void show_user_list(user_node *list) {
+    if (!list->data) {
+        printf("Este Usuario no tiene seguidos\n\n");
+        return;
+    }
+
+    /* Recorre la lista enlazada hasta el final */
+    while (list->next)
+        list = list->next;
+
+    printf("Seguidos:\n");
+    while (list) {
+        printf("@%s\n", list->data->username);
+        list = list->prev;
+    }
+    printf("\n");
+    return;
 }

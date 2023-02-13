@@ -8,6 +8,7 @@
  */
 
 void read_user_and_pass(char **username, char **password);
+void put_description(char **d);
 void add_tweet(user **u, char *str_tw);
 void secondary_screen(user **u);
 void screen1(user_node **hash_table);

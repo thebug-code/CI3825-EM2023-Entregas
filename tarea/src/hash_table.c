@@ -5,9 +5,9 @@
  */
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include <aio.h>
+#include <stdio.h>
 
 #include "hash_table.h"
 #include "user_list.h"
@@ -61,7 +61,6 @@ user *get_user(user_node **hash_table, char* str) {
         }
         head = head->next;
     }
-
     return NULL;
 }
 

@@ -4,7 +4,8 @@
  */
 
 #include <stdlib.h> 
-#include <stdio.h> 
+#include <stdio.h>
+#include <string.h>
 
 #include "user_list.h"
 #include "timeline.h"
@@ -84,13 +85,22 @@ void show_timeline(user_node *list_follower_users) {
         exit(0);
 
     /* Mostrar timeline */
-    if (!timeline_list->data)
+    if (!timeline_list->data) {
+        printf("No hay tweets para mostrar\n");
         return; /* No hay nada que mostrar */
+    }
+
+    /* Recorre la lista enlazada hasta el final */
+    while (timeline_list->next)
+        timeline_list = timeline_list->next;
 
     while (timeline_list != NULL) {
+        char *t = ctime(&(timeline_list->data->second->tm));
+
         printf("User @%s\n", timeline_list->data->first);
-        printf("Dijo a las %s: '%s'\n", ctime(&(timeline_list->data->second->tm)), timeline_list->data->second->str_tweet);
-        timeline_list = timeline_list->next;
+        printf("Dijo a las %.*s:'%s'\n", (int)strlen(t)-1, t, timeline_list->data->second->str_tweet);
+        printf("------------------------------------\n");
+        timeline_list = timeline_list->prev;
     }
     return;
 }
