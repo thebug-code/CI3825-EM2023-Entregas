@@ -1,10 +1,10 @@
 CC = gcc
 CFLAGS = -ansi -Wall -pedantic
 
-all: sustituir
+all: twitter
 
-sustituir: main.o user_list.o tweet_list.o hash_table.o pair.o timeline.o screens.o
-	$(CC) $(CFLAGS) -o sustituir main.o user_list.o tweet_list.o hash_table.o pair.o timeline.o screens.o
+twitter: main.o user_list.o tweet_list.o hash_table.o pair.o timeline.o screens.o
+	$(CC) $(CFLAGS) -o twitter main.o user_list.o tweet_list.o hash_table.o pair.o timeline.o screens.o
 
 main.o: main.c
 	$(CC) $(CFLAGS) -c main.c
@@ -28,4 +28,4 @@ screens.o: screens.c
 	$(CC) $(CFLAGS) -c screens.c
 
 clean:
-	rm *.o sustituir
+	rm *.o twitter
