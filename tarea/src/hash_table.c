@@ -1,7 +1,8 @@
 /**
- * Implementacion de la tabla de hash.
+ * Implementacion de la tabla de hash y de funciones utiles para
+ * la misma.
  *
- * Soporta las operaciones creacion, insercion y obtencion de user
+ * Soporta las operaciones creacion, insercion y obtencion de user.
  */
 
 #include <stdlib.h>
@@ -89,9 +90,11 @@ void free_table(user_node **hash_table) {
     for (i = 0; i < HASH_MAX; i++) {
         item = hash_table[i];
         if (item->data)
-            free_user_node(item);
-        else
-            free(item);
+            free_user_node(&item);
+        else {
+            free(hash_table[i]);
+            hash_table[i] = NULL;
+        }
     }
 
     free(hash_table);
