@@ -1,8 +1,9 @@
 /**
- * Implementacion de la lista circular, donde cada cada nodo es un
- * apuntador a struct User.
+ * Implementaciones de funciones utiles para struct User, 
+ * y lista circular (donde cada nodo es un apuntador a User).
  *
- * Soporta las operaciones de creacion y isercion.
+ * La lista soporta las operaciones de creacion, isercion, 
+ * busqueda e impresion de usuarios en un formato legible.
  */
 
 #include <stdlib.h>
@@ -119,36 +120,25 @@ user* new_user(char* username, int hash_password, char* description) {
  *
  *  @param item: Apuntador al nodo a liberar.
  */
-void free_user_node(user_node* item) {
-    tweet_node *tw = item->data->tweet_list;
-    user_node *u = item->data->sig_list;
-    user_node *tmp0 = NULL;
-    tweet_node *tmp1 = NULL;
+void free_user_node(user_node** item) {
+    tweet_node *tw = (*item)->data->tweet_list;
+    tweet_node *tmp;
         
-    if (!tw->data) 
+    if (!tw->data)
         free(tw);
     else {
         /* Recorrer la lista de tweet del usuario */
         while (tw) {
-            tmp1 = tw->next;
-            free_tweet_node(tw);
-            tw = tmp1;
+            tmp = tw;
+            tw = tw->next;
+            free_tweet_node(&tmp);
         }
     }
 
-    if (!u->data) 
-        free(u);
-    else {
-        /* Recorrer la lista de los siguiendo del usuario */
-        while (u) {
-            tmp0 = u->next;
-            free_user_node(u);
-            u = tmp0;
-        }
-    }
+    free((*item)->data);
+    free(*item);
 
-    free(item->data);
-    free(item);
+    *item = NULL;
 }
 
 /* Muestra en pantalla a los usuarios seguidos
