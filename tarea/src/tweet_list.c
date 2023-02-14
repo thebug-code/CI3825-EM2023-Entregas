@@ -1,8 +1,9 @@
 /**
- * Implementacion de la lista circular donde cada cada nodo es un
- * apuntador a struct tweet y de las funciones auxiliares paea tweet.
+ * Implementaciones de la lista circular donde cada cada nodo es un
+ * apuntador a struct tweet y de las funciones auxiliares para tweet.
  *
- * Soporta las operaciones de creacion e insercion.
+ * La lista soporta las operaciones de creacion, insercion e impresion
+ * en un formato legible.
  */
 
 #include <stdlib.h>
@@ -92,6 +93,7 @@ tweet* new_tweet(char* str_tweet, time_t tm) {
  *
  * @paran list: puntero a la cabeza de la lista con los tweet
  * del usuario.
+ * @username: Puntero de caracteres con el username del usuario.
  */
 void show_tweet_list(tweet_node *list, char *username) {
     if (!list->data) {
@@ -118,7 +120,8 @@ void show_tweet_list(tweet_node *list, char *username) {
  *
  *  @param item: Apuntador al nodo a liberar.
  */
-void free_tweet_node(tweet_node* item) {
-    free(item->data);
-    free(item);
+void free_tweet_node(tweet_node** item) {
+    free((*item)->data);
+    free(*item);
+    *item = NULL;
 }
