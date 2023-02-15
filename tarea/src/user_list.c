@@ -140,26 +140,3 @@ void free_user_node(user_node** item) {
 
     *item = NULL;
 }
-
-/* Muestra en pantalla a los usuarios seguidos
- *
- * @paran list: puntero a la cabeza de la lista con los usuarios.
- */
-void show_user_list(user_node *list) {
-    if (!list->data) {
-        printf("Este Usuario no tiene seguidos\n\n");
-        return;
-    }
-
-    /* Recorre la lista enlazada hasta el final */
-    while (list->next)
-        list = list->next;
-
-    printf("Seguidos:\n");
-    while (list) {
-        printf("@%s\n", list->data->username);
-        list = list->prev;
-    }
-    printf("\n");
-    return;
-}

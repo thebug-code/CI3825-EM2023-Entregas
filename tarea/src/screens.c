@@ -111,7 +111,6 @@ void screen3(user_node **hash_table, user **u, user *to_user) {
         else {
             /* Mostrar tweet del usuario */
             printf("\nDescripcion: %s\n\n", stalkear_user->description);
-            show_user_list(stalkear_user->sig_list);
             show_tweet_list(stalkear_user->tweet_list, stalkear_user->username);
             screen3(hash_table, u, stalkear_user);
         }
