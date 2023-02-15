@@ -1,3 +1,15 @@
+/*
+ * Programa que inicializa la aplicacion: una alterniva a Twitter con un sencillo programa
+ * de cónsola para probarlo.
+ *
+ * Equipo de desarrollo:
+ *
+ * Karen Martinez.
+ * Oliver Bueno.
+ * ALejandro Menses
+ *
+ * Fecha: 14-02-2023.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 
