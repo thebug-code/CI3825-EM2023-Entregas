@@ -15,13 +15,12 @@
  * opciones ingresadas son validas y de mostrar las demas pantallas.
  */
 void screen1(user_node **hash_table) {
-    char *input = malloc(8 * sizeof(char)); /* opciones de entrada */
+    char *input = malloc(7 * sizeof(char)); /* opciones de entrada */
 
     printf("\nDON’T MISS WHAT’S HAPPENING! LOGIN, SIGNUP OR LEAVE\n\n");
-    fflush(stdin);
-    fgets(input, 8, stdin); 
-
-    clear_string(&input);
+    fgets(input, 7, stdin); 
+    
+    clear_input_buffer(&input);
 
     if (!strcmp(input, "login")) {
         /* Login del usuario */
@@ -35,10 +34,10 @@ void screen1(user_node **hash_table) {
     }
     /* salida del programa*/
     else if (!strcmp(input, "leave")) {
+        free(input);
         return;
     }
     else {
-        printf("%s\n", input);
         printf("\nEntrada erronea. Por favor ingrese una opcion valida\n");
         screen1(hash_table);
     }
@@ -57,15 +56,14 @@ void screen2(user_node **hash_table) {
     /* Verificar si el login es valido */
     struct_user = get_user(hash_table, username);
     if (!struct_user || struct_user->hash_password != hash_code(password)) {
-        printf("\nEl usuario o la contrasena son incorrectos\n");
-        return;
+        printf("El usuario o la contrasena son incorrectos\n");
     }
     else {
         /* Mostrar timeline del usuario */
         show_timeline(struct_user->sig_list);
         screen3(hash_table, &struct_user, NULL); /* Mostrar pantalla 3 */
-        return;
     }
+    return;
 }
 
 /* Tercera pantalla del usuario. Ofrece las opciones de anadidura
@@ -77,21 +75,22 @@ void screen2(user_node **hash_table) {
  */
 void screen3(user_node **hash_table, user **u, user *to_user) {
     user *struct_user = *u;
-    char *input = malloc(8 * sizeof(char)); /* opciones de entrada */
-    char *str_tw = malloc(283 * sizeof(char)); /* tweet del usuario */
-
+    char *input = malloc(7 * sizeof(char)); /* opciones de entrada */
+    char *str_tw = malloc(281 * sizeof(char)); /* tweet del usuario */
+    
     printf("\nWHATS HAPPENING?\n\n");
-    fgets(input, 8, stdin); 
+    fgets(input, 7, stdin); 
 
-    clear_string(&input);
+    clear_input_buffer(&input);
 
     /* Agregar tweet */
     if (!strcmp(input, "+")) {
-        fgets(str_tw, 283, stdin); 
-        clear_string(&str_tw);
+        fgets(str_tw, 281, stdin); 
+        clear_input_buffer(&str_tw);
         add_tweet(&struct_user, str_tw);
 
         printf("\nSu tweet fue anadido con exito\n");
+
         screen3(hash_table, u, NULL);
     }
     /* Ir a perfil de usuario */
@@ -99,13 +98,14 @@ void screen3(user_node **hash_table, user **u, user *to_user) {
         user *stalkear_user = NULL;
         char *username = malloc(31 * sizeof(char));
         fgets(username, 31, stdin);
-        clear_string(&username);
+
+        clear_input_buffer(&username);
 
         stalkear_user = get_user(hash_table, username); /* Obtener usuario a stalker */
 
         /* Verificar si el usuario existe */
         if (!stalkear_user) {
-            printf("\n@%s no es un perfil de usuario existente", username);
+            printf("\n@%s no es un perfil de usuario existente\n", username);
             screen3(hash_table, u, NULL);
         }
         else {
@@ -127,16 +127,17 @@ void screen3(user_node **hash_table, user **u, user *to_user) {
             screen3(hash_table, u, NULL);
         }
     }
-    else if (!strcmp(input, "logout"))
+    else if (!strcmp(input, "logout")) {
+        free(input);
+        free(str_tw);
         return;
+    }
     else {
         printf("\nEntrada erronea. Por favor ingrese una opcion valida\n");
 
         /* Verificar si se esta estalkeando a un usuaio */
-        if (to_user)
-            screen3(hash_table, u, to_user);
-        else
-            screen3(hash_table, u, NULL);
+        if (to_user) screen3(hash_table, u, to_user);
+        else screen3(hash_table, u, NULL);
     }
 }
 
@@ -145,7 +146,7 @@ void screen3(user_node **hash_table, user **u, user *to_user) {
 void screen4(user_node **hash_table) {
     char *username = malloc(31 * sizeof(char)); /* username del usuario */
     char *password = malloc(16 * sizeof(char)); /* password del usuario */
-    char *description = malloc(65 * sizeof(char)); /* descripcion del perfil */
+    char *description = malloc(66 * sizeof(char)); /* descripcion del perfil */
 
     read_user_and_pass(&username, &password);
     put_description(&description);
@@ -154,12 +155,11 @@ void screen4(user_node **hash_table) {
     if (!get_user(hash_table, username)) {
         insert_user_hash_table(&hash_table, new_user(username, hash_code(password), description));           
         printf("Registro exitoso.\n");
-        return;
     }
     else {
-        printf("\nEl usuario ya existe. Intente con otro usuario\n");
-        return;
+        printf("El usuario ya existe. Intente con otro usuario\n");
     }
+    return;
 }
 
 /*
@@ -186,32 +186,52 @@ void read_user_and_pass(char **u, char **p) {
     char *password = *p;
 
     printf("\nUSERNAME: ");
-    fflush(stdin);
     fgets(username, 31, stdin); 
-    clear_string(&username);
+
+    clear_input_buffer(&username);
 
     printf("PASSWORD: ");
-    fflush(stdin);
     fgets(password, 16, stdin); 
-    clear_string(&password);
+    
+    clear_input_buffer(&password);
     printf("\n");
 
     return; 
 }
 
+/*
+ * Pide por input standard la descripcion del perfil del usuario.
+ *
+ * @param d: Puntero a char donde se almacenara la description.
+ */
 void put_description(char **d) {
     char *description = *d;
     printf("DESCRIPTION: ");
-    fflush(stdin);
-    fgets(description, 65, stdin);
-    clear_string(&description);
+    fgets(description, 66, stdin);
+
+    clear_input_buffer(&description);
     printf("\n");
 }
 
 /* Remove trailing newline, if there. */
-void clear_string(char **s) {
+u_int8_t clear_string(char **s) {
     char *input = *s;
-    if ((strlen(input) > 0) && (input[strlen(input) - 1] == '\n'))
-        input[strlen(input) - 1] = '\0';
+    if (strlen(input) > 0 && input[strlen(input) - 1] == '\n') {
+        input[strlen(input) - 1] = '\0'; 
+        return 1;
+    }
+    return 0;
+}
+
+/*
+ * Limpia el bufer de entrada luego de usar fgets().
+ *
+ * @param input: Puntero a char donde se almaceno la cadena
+ * de caracteres.
+ */
+void clear_input_buffer(char** input) {
+    if (clear_string(input)) return;
+    else while(fgetc(stdin) != '\n') continue; /* discard until newline */
+
     return;
 }
