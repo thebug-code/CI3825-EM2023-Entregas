@@ -13,8 +13,7 @@ int main(int argc, char *argv[]) {
 	imprimir(paradas, lineas);
     */
 
-    sched_node *scheds = new_sched_list();
-    ul_svc_charac(argv[1], &scheds);
-	
+
+    read_input(argc, argv);
 	return 0;
 }
