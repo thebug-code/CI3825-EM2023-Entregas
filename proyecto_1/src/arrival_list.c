@@ -36,7 +36,7 @@ arrival_node *new_arrival_list() {
  * Añade un arrival nodo a la lista.
  *
  * @param list: Apuntador a la direccion de la cabeza de la lista.
- * @param data: Dato a almacenar en el nodo, de tipo arraival.
+ * @param data: Dato a almacenar en el nodo, de tipo arrival.
  * @return 1 si la operación fue exitosa. De lo contrario 0.
  */
 u_int8_t push_arrival_list(arrival_node **list, arrival *data) {
