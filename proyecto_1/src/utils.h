@@ -4,8 +4,10 @@
 #define USAGE "USAGE: ./simutransusb -s <archivo> [-c <archivo>] [-t <num>]\n"
 
 #include "schedule_list.h"
+#include "service_list.h"
 
-u_int8_t ul_svc_charac(char filename[], sched_node** scheds);
+svc_node *ul_svc_charac(char filename[]);
+void print_svc_list(svc_node *list);
 void read_input(int argc, char *argv[]); 
 void check_opt_arg(char* optarg);
 

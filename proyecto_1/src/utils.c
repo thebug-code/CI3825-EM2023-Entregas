@@ -10,30 +10,23 @@
 
 
 #include "utils.h"
-#include "service_list.h"
+
 
 /*
  * Carga la caracterizacion del servicio en una lista enlazada
  *
  * @param filename: ruta del archivo con la caracterizacioin del servicio
- * @param svc_charac_list: Puntero a la cabeza de la lista donde se cargara
- * la caracterizacion del servicio
- * @return 1 si la carga fue exitosa de lo contrario 0.
+ * @return Puntero a la cabeza de la lista con los servicios si la operacion
+ * se realizo exito. NULL en caso contrario
  */
-u_int8_t ul_svc_charac(char filename[], sched_node** scheds) {
-    FILE * fp;
-    char * line = NULL;
-    size_t len = 0;
+svc_node *ul_svc_charac(char filename[]) {
+    FILE *fp;           /* Apuntador a archivo */
+    char *line = NULL;  /* Ptr a lineas del archivo */
+    size_t len = 0;     /* Var para numero de chars de cada linea */
     ssize_t read;
-    int hour;
-    int min;
-    int cap;
-    svc *new_service; /* Lista de servicios */
-    svc_node *svc_list; /* Nodo de la lista de servicios */
-    sched *new_schedule; /* Lista de horarios */
+    svc_node *svc_list; /* Lista de servicios */
 
     fp = fopen(filename, "r");
-
     if (!fp)
         return 0;
 
@@ -49,7 +42,7 @@ u_int8_t ul_svc_charac(char filename[], sched_node** scheds) {
         while(line) {
             if (!strcmp(route, line)) {
                 /* Crea un nuevo servicio */
-                new_service = new_svc(route); /* FALTA VERIFICAR */
+                svc *new_service = new_svc(route); /* FALTA VERIFICAR */
                 /* Lo inserta en la lista de servicios */
                 push_service_list(&svc_list, new_service); /* FALTA VERIFICAR */
             }
@@ -57,12 +50,12 @@ u_int8_t ul_svc_charac(char filename[], sched_node** scheds) {
                 /* Extrae la hora, minuto y capacidad del 
                  * j-enesimo horario */
                 if (strcmp("\n", line)) {
-                    hour = atoi(strtok(line, ":"));
-                    min = atoi(strtok(NULL, "("));
-                    cap = atoi(strtok(NULL, ") "));
+                    int hour = atoi(strtok(line, ":"));
+                    int min = atoi(strtok(NULL, "("));
+                    int cap = atoi(strtok(NULL, ") "));
 
                     /* Crea un nuevo horario */
-                    new_schedule = new_sched(hour, min, cap);
+                    sched *new_schedule = new_sched(hour, min, cap);
 
                     /* Lo inserta en lista de horarios de la 
                     * ruta asociada */
@@ -76,11 +69,44 @@ u_int8_t ul_svc_charac(char filename[], sched_node** scheds) {
 
     fclose(fp);
 
-    
     if (line)
         free(line);
-    return 1;   
+
+    return svc_list; 
 }
+
+
+/*
+ * Imprime la lista enlazada con los servicios (rutas y 
+ * horarios asociados) en un formato legible para fines
+ * de depuracion.
+ *
+ * @param list: Puntero a la cabeza de lista de servicios
+ */
+void print_svc_list(svc_node *list) {
+	svc_node *s = list;
+
+	while (s) {
+		sched_node *sched_s = s->data->scheds; /* Lista de horarios de la s-esima ruta */
+		printf("%s ", s->data->route);
+
+        /* Recorre la lista de horarios y los imprime */
+		while (sched_s) {
+            char st[30];
+            strftime(st, sizeof st, "%H:%M", localtime(&(sched_s->data->time)));
+			printf("%s ", st);
+			printf("%d ", sched_s->data->cap);
+
+			sched_s = sched_s->next;
+		}
+
+		printf("\n");
+		s = s->next;
+	}
+
+    return;
+}
+
 
 /*
  * Verifica que un argumento de opcion no es otra opcion. 
@@ -99,6 +125,7 @@ void check_opt_arg(char* optarg) {
         return;
 }
 
+
 /*
  * Lee y verifica los argumentos pasados por lineas de comandos.
  * En caso de que haya un error muestra un mensaje con el error
@@ -108,7 +135,8 @@ void check_opt_arg(char* optarg) {
  * @param argv: Vector de argumentos de la linea de comandos
  */
 void read_input(int argc, char *argv[])  {
-    sched_node *scheds; /* Lista de horarios */
+    svc_node *svc_list; /* Lista de servicios */
+
     /* 
      * Variables para indicar las opciones 
      */
@@ -168,8 +196,8 @@ void read_input(int argc, char *argv[])  {
    /*
     * Carga la caracterizacion del servicio en una lista enlazada
     */
-    scheds = new_sched_list();
-    ul_svc_charac(svalue, &scheds);
+    svc_list = ul_svc_charac(svalue);
+    print_svc_list(svc_list);
 
     /* printf("svalue = \"%s\"\n", svalue);
 	printf("cvalue = \"%s\"\n", cvalue);
