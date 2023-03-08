@@ -1,7 +1,6 @@
 /**
  * Implementaciones de funciones utiles para estructura de tipo
  * Arrival_schedule.
- *
  */
 
 #include <stdlib.h>
@@ -10,9 +9,9 @@
 /*
  * Crea una structura Arrival_schedule
  *
- * @param hour: j_esima hora de la i_esima parada
+ * @param hour: j-esima hora de la i-esima parada
  * @param people: cantidad de personas que llegan a la j-esima
- *               hora a la i-esima parada
+ * hora a la i-esima parada
  * @return Un apuntador a Arrival_schedule si la creacion fue exitosa.
  *         NULL en caso contrario.
  */

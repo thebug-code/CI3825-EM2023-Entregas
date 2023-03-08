@@ -3,8 +3,8 @@ CFLAGS = -ansi -Wall -pedantic
 
 all: prueba
 
-prueba: main.o arrival_schedule.o stop_list.o arrival_list.o bus_stop.o load_file.o
-	$(CC) $(CFLAGS) -o prueba main.o arrival_schedule.o stop_list.o arrival_list.o bus_stop.o load_file.o
+prueba: main.o arrival_schedule.o stop_list.o arrival_list.o bus_stop.o utils.o
+	$(CC) $(CFLAGS) -o prueba main.o arrival_schedule.o stop_list.o arrival_list.o bus_stop.o utils.o
 
 main.o: main.c
 	$(CC) $(CFLAGS) -c main.c
@@ -21,8 +21,8 @@ arrival_list.o: arrival_list.c
 bus_stop.o: bus_stop.c
 	$(CC) $(CFLAGS) -c bus_stop.c
 
-load_file.o: load_file.c
-	$(CC) $(CFLAGS) -c load_file.c
+utils.o: utils.c
+	$(CC) $(CFLAGS) -c utils.c
 
 clean:
 	rm *.o prueba

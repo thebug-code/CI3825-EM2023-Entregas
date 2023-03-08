@@ -31,6 +31,7 @@ stop_node *new_stop_list() {
     return head;
 }
 
+
 /**
  * Añade un svc nodo a la lista.
  *

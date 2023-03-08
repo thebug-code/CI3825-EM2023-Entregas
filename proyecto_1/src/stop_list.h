@@ -16,4 +16,5 @@ typedef struct Stop_node {
 
 stop_node *new_stop_list();
 u_int8_t push_stop_list(stop_node **list, stop *data);
+
 #endif

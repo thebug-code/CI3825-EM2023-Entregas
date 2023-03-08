@@ -31,6 +31,7 @@ arrival_node *new_arrival_list() {
     return head;
 }
 
+
 /**
  * Añade un arrival nodo a la lista.
  *
@@ -66,6 +67,7 @@ u_int8_t push_arrival_list(arrival_node **list, arrival *data) {
     return 1;
 }
 
+
 /*
  *  Libera un nodo de la lista enlazada de horarios de llegada.
  *
@@ -78,7 +80,7 @@ void free_arrival_list(arrival_node** list) {
         free(node);
     }
     else {
-        /* Recorre la lista de horarios de llegada*/
+        /* Recorre la lista de horarios de llegada */
         while (node) {
             arrival_node *tmp = node;
             node = node->next;

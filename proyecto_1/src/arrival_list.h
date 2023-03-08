@@ -10,7 +10,7 @@
  */
 typedef struct Arrival_node {
     struct Arrival_node *prev, *next; /* Elementos anterior y siguiente */
-    arrival *data; /* Dato de nodo, de tipo arraival */
+    arrival *data; /* Dato de nodo, de tipo arraval */
 } arrival_node;
 
 arrival_node *new_arrival_list();
