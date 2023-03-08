@@ -19,16 +19,20 @@
  *         NULL en caso contrario.
  */
 sched* new_sched(int hour, int min, int cap) {
-    struct tm strtime;
+    struct tm *date;
+    time_t now;
     sched *s = malloc(sizeof(sched));
 
     if (!s)
         return NULL;
 
-    strtime.tm_hour = hour;
-    strtime.tm_min = min;
+    time(&now);
+    date = localtime(&now);
+
+    date->tm_hour = hour;
+    date->tm_min = min;
  
-    s->time = mktime(&strtime);
+    s->time = mktime(date);
     s->cap = cap;
 
     return s;
