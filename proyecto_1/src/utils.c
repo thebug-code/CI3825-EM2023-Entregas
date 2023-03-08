@@ -20,18 +20,21 @@
  * se realizo exito. NULL en caso contrario
  */
 svc_node *ul_svc_charac(char filename[]) {
-    FILE *fp;           /* Apuntador a archivo */
-    char *line = NULL;  /* Ptr a lineas del archivo */
-    size_t len = 0;     /* Var para numero de chars de cada linea */
+    FILE *fp;                /* Apuntador a archivo */
+    char *line = NULL;       /* Puntero a lineas del archivo */
+    size_t len = 0;          /* Numero de caracteres de cada linea */
+    int first_time = 1;
     ssize_t read;
-    svc_node *svc_list; /* Lista de servicios */
+    svc_node *ptr_svc_list_h; /* Ptr a la cabeza de la lista de svcs */
+    svc_node *ptr_svc_list;   /* Ptr a nodos de la lista de svcs */
 
     fp = fopen(filename, "r");
     if (!fp)
         return 0;
 
     /* Inicializa la lista con los servicios */
-    svc_list = new_service_list(); /* FALTA VERIFICAR */
+    ptr_svc_list_h = new_service_list(); /* FALTA VERIFICAR */
+    ptr_svc_list = ptr_svc_list_h;
 
     /* Leer archivo linea por linea */
     while ((read = getline(&line, &len, fp)) != -1) {
@@ -44,7 +47,10 @@ svc_node *ul_svc_charac(char filename[]) {
                 /* Crea un nuevo servicio */
                 svc *new_service = new_svc(route); /* FALTA VERIFICAR */
                 /* Lo inserta en la lista de servicios */
-                push_service_list(&svc_list, new_service); /* FALTA VERIFICAR */
+                push_service_list(&ptr_svc_list_h, new_service); /* FALTA VERIFICAR */
+
+                /* Verifica si se "mueve" el puntero al siguiente nodo */
+                if (!first_time) ptr_svc_list = ptr_svc_list->next;
             }
             else {
                 /* Extrae la hora, minuto y capacidad del 
@@ -59,12 +65,14 @@ svc_node *ul_svc_charac(char filename[]) {
 
                     /* Lo inserta en lista de horarios de la 
                     * ruta asociada */
-                    push_sched_list(&(svc_list->data->scheds), new_schedule);
+                    push_sched_list(&(ptr_svc_list->data->scheds), new_schedule);
                 }
             }
 
             line = strtok(NULL, "");
         }
+
+        first_time = 0;
     }
 
     fclose(fp);
@@ -72,7 +80,7 @@ svc_node *ul_svc_charac(char filename[]) {
     if (line)
         free(line);
 
-    return svc_list; 
+    return ptr_svc_list_h; 
 }
 
 
@@ -84,11 +92,9 @@ svc_node *ul_svc_charac(char filename[]) {
  * @param list: Puntero a la cabeza de lista de servicios
  */
 void print_svc_list(svc_node *list) {
-	svc_node *s = list;
-
-	while (s) {
-		sched_node *sched_s = s->data->scheds; /* Lista de horarios de la s-esima ruta */
-		printf("%s ", s->data->route);
+	while (list) {
+		sched_node *sched_s = list->data->scheds; /* Lista de horarios de la s-esima ruta */
+		printf("%s ", list->data->route);
 
         /* Recorre la lista de horarios y los imprime */
 		while (sched_s) {
@@ -101,7 +107,7 @@ void print_svc_list(svc_node *list) {
 		}
 
 		printf("\n");
-		s = s->next;
+		list = list->next;
 	}
 
     return;
