@@ -48,6 +48,7 @@ u_int8_t push_sched_list(sched_node **list, sched *data) {
     } else {
         /* De lo contrario, crea una nueva entrada para la lista
         dinamicamente */
+        sched_node *temp;
         sched_node *new_node = malloc(sizeof(sched_node));
         if (!new_node)
             return 0;
@@ -55,12 +56,14 @@ u_int8_t push_sched_list(sched_node **list, sched *data) {
         /* Coloca el dato en el nodo */
         new_node->data = data;
 
-        new_node->next = head;
-        new_node->prev = NULL;
-        head->prev = new_node;
+        /* Recorre toda la lista para llegar al último nodo */
+        temp = head;
+        while (temp->next)
+            temp = temp->next;
 
-        /* El nuevo node es la cabeza de la lista */
-        *list = new_node;
+        temp->next = new_node;  
+        new_node->prev = temp;  
+        new_node->next = NULL; 
     }
 
     return 1;
