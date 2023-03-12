@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /* Implementaciones de funciones utiles para transporte USB
  */
 
@@ -9,9 +8,6 @@
 #include <unistd.h>
 #include <getopt.h>
 
-
-#include "bus_stop.h"
-#include "arrival_schedule.h"
 #include "utils.h"
 
 
@@ -32,8 +28,10 @@ svc_node *ul_svc_charac(char filename[]) {
     svc_node *ptr_svc_list;   /* Ptr a nodos de la lista de svcs */
 
     fp = fopen(filename, "r");
-    if (!fp)
-        return 0;
+    if (!fp) {
+        perror("no such file");
+		return NULL;
+    }
 
     /* Inicializa la lista con los servicios */
     ptr_svc_list_h = new_service_list(); /* FALTA VERIFICAR */
@@ -111,6 +109,11 @@ void print_svc_list(svc_node *list) {
 
 		printf("\n");
 		list = list->next;
+    }
+}
+
+
+/*
  * Carga el archivo de caracterizacion de la carga al sistema 
  * en un arreglo de tipo stop
  *
@@ -129,7 +132,6 @@ stop_node *ul_charac_ld_sys(char filename[]) {
 	stop *n_stop;
 	stop_node *stop_list;
 	arrival *arriv;
-
 
 	if (!file) {
 		perror("no such file");
@@ -177,7 +179,15 @@ stop_node *ul_charac_ld_sys(char filename[]) {
 }
 
 
-/*Función impresion para detectar errores*/
+/*
+ * Imprime la lista enlazada con los datos de carga del
+ * sistema (paradas de los autobuses, tiempo de recorrido
+ * y numero de personas que llegan a las paradas) 
+ * en un formato legible para fines de depuracion.
+ *
+ * @param list: Puntero a la cabeza de lista de paradas
+ * de autobuses
+ */
 void print_charac_ld_sys(stop_node *list) {
 	stop_node *h = list;
 
@@ -226,6 +236,7 @@ void check_opt_arg(char* optarg) {
  */
 void read_input(int argc, char *argv[])  {
     svc_node *svc_list; /* Lista de servicios */
+	stop_node *stop_list; /* Lista de paradas de los buses*/
 
     /* 
      * Variables para indicar las opciones 
@@ -287,7 +298,14 @@ void read_input(int argc, char *argv[])  {
     * Carga la caracterizacion del servicio en una lista enlazada
     */
     svc_list = ul_svc_charac(svalue);
-    print_svc_list(svc_list);
+    /* print_svc_list(svc_list); */
+
+   /*
+    * Carga la caracterizacion de carga del sistema en una lista
+    * enlazada FALTA VERIFICAR
+    */
+	stop_list = ul_charac_ld_sys(cvalue);
+	/* print_charac_ld_sys(stop_list); */
 
     /* printf("svalue = \"%s\"\n", svalue);
 	printf("cvalue = \"%s\"\n", cvalue);

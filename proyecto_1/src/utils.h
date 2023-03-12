@@ -7,6 +7,8 @@
 #include "schedule_list.h"
 #include "service_list.h"
 #include "stop_list.h"
+#include "bus_stop.h"
+#include "arrival_schedule.h"
 
 svc_node *ul_svc_charac(char filename[]);
 void print_svc_list(svc_node *list);
