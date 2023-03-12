@@ -1,7 +1,6 @@
 /**
  * Implementaciones de funciones utiles para estructura de tipo
  * schedule.
- *
  */
 
 #include <stdlib.h>
