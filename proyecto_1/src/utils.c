@@ -258,3 +258,78 @@ void read_input(int argc, char *argv[], svc_node **svc_list, stop_node **stop_li
 	printf("tvalue = \"%s\"\n", tvalue); */
     return;
 }
+
+
+/*
+ * Cuenta el numero de lineas de un archivo.
+ * En caso que el archivo no exista aborta el proceso.
+ *
+ * @param filename: Ruta del archivo
+ */
+int n_lines(char filename[]) {
+	FILE *fp = fopen(filename, "r"); /* Apuntador a archivo */
+	char ch; /* Caracteres de la i-esima linea del archivo */
+	int cont = 0; /* Counter loop */
+
+	if (!fp) {
+		perror("no such file");
+        exit(EXIT_FAILURE);
+    }
+
+    /* Extrae caracteres del archivo y los almacena en ch */
+	while((ch = fgetc(fp)) != EOF)
+        if (ch == '\n') cont++;
+
+    fclose(fp);
+
+	return cont;
+}
+
+
+/**
+ * Inicializa un arreglo de n pipes. En caso haber un error durante
+ * la operacion aborta el proceso.
+ * 
+ * @param n: numero de pipes a inicializar.
+ * @return int** Apuntador a arreglo nx2 de pipes inicializados.
+ */
+int **initialize_pipes(int n) {
+    /* Counter loop */
+    int i;
+
+    /* Asigna memoria para n punteros a entero */
+    int **pipefd = (int **)malloc(sizeof(int *) * n);
+
+    if (!pipefd) {
+        fprintf(stderr, "Error! en la reserva de memoria\n");
+        exit(EXIT_FAILURE);
+    }
+
+    /* Inicializa n pipes */
+    for (i = 0; i < n; i++) {
+        pipefd[i] = (int *) malloc(sizeof(int) * 2);
+
+        if (!pipefd) {
+            fprintf(stderr, "Error! en la reserva de memoria\n");
+        }
+        else if (pipe(pipefd[i]) == -1) {
+            perror("Error al crear pipe");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    return pipefd;
+}
+
+
+/**
+ * Libera la memoria asignada a un arreglo de n pipes.
+ * 
+ * @param pipefd: puntero a punteros de pipes.
+ * @n: numero de pipes a liberar.
+ */
+void free_pipe_arr(int **pipefd, int n) {
+    int i;
+    for (i = 0; i < n; i++) free(pipefd[i]);
+    free(pipefd);
+}
