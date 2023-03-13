@@ -233,10 +233,13 @@ void check_opt_arg(char* optarg) {
  *
  * @param argc: Numero de argumentos de la linea de comandos
  * @param argv: Vector de argumentos de la linea de comandos
+ * @param svc_list: puntero a la cabeza de la lista de servicios
+ * @param stop_list: puntero a la cabeza de la lista de paradas
+ * de autobuses
  */
-void read_input(int argc, char *argv[])  {
-    svc_node *svc_list; /* Lista de servicios */
-	stop_node *stop_list; /* Lista de paradas de los buses*/
+void read_input(int argc, char *argv[], svc_node **svc_list, stop_node **stop_list)  {
+    svc_node *svc_list_h = *svc_list;
+	stop_node *stop_list_h = *stop_list;
 
     /* 
      * Variables para indicar las opciones 
@@ -297,14 +300,14 @@ void read_input(int argc, char *argv[])  {
    /*
     * Carga la caracterizacion del servicio en una lista enlazada
     */
-    svc_list = ul_svc_charac(svalue);
+    svc_list_h = ul_svc_charac(svalue);
     /* print_svc_list(svc_list); */
 
    /*
     * Carga la caracterizacion de carga del sistema en una lista
     * enlazada FALTA VERIFICAR
     */
-	stop_list = ul_charac_ld_sys(cvalue);
+	stop_list_h = ul_charac_ld_sys(cvalue);
 	/* print_charac_ld_sys(stop_list); */
 
     /* printf("svalue = \"%s\"\n", svalue);
