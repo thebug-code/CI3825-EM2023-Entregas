@@ -11,10 +11,8 @@
 #include "arrival_schedule.h"
 
 svc_node *ul_svc_charac(char filename[]);
-void print_svc_list(svc_node *list);
 void read_input(int argc, char *argv[], svc_node **svc_list, stop_node **stop_list);
 void check_opt_arg(char* optarg);
 stop_node *ul_charac_ld_sys(char filename[]);
-void print_charac_ld_sys(stop_node *list);
 
 #endif

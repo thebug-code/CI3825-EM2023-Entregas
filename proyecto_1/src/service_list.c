@@ -68,3 +68,30 @@ u_int8_t push_service_list(svc_node **list, svc *data) {
     return 1;
 }
 
+
+/*
+ * Imprime la lista enlazada con los servicios (rutas y 
+ * horarios asociados) en un formato legible para fines
+ * de depuracion.
+ *
+ * @param list: Puntero a la cabeza de lista de servicios
+ */
+void print_svc_list(svc_node *list) {
+	while (list) {
+		sched_node *sched_s = list->data->scheds; /* Lista de horarios de la s-esima ruta */
+		printf("%s ", list->data->route);
+
+        /* Recorre la lista de horarios y los imprime */
+		while (sched_s) {
+            char st[30];
+            strftime(st, sizeof st, "%H:%M", localtime(&(sched_s->data->time)));
+			printf("%s ", st);
+			printf("%d ", sched_s->data->cap);
+
+			sched_s = sched_s->next;
+		}
+
+		printf("\n");
+		list = list->next;
+    }
+}

@@ -70,3 +70,32 @@ u_int8_t push_stop_list(stop_node **list, stop *data) {
 
     return 1;
 }
+
+
+/*
+ * Imprime la lista enlazada con los datos de carga del
+ * sistema (paradas de los autobuses, tiempo de recorrido
+ * y numero de personas que llegan a las paradas) 
+ * en un formato legible para fines de depuracion.
+ *
+ * @param list: Puntero a la cabeza de lista de paradas
+ * de autobuses
+ */
+void print_charac_ld_sys(stop_node *list) {
+	stop_node *h = list;
+
+	while (h) {
+		arrival_node *arri = h->data->arrivals;
+		printf("%s %s %d ", h->data->cod, h->data->route_name, h->data->recorr);
+
+		while (arri) {
+			printf("%d ", arri->data->n_people);
+			arri = arri->next;
+		}
+
+		printf("\n");
+		h = h->next;
+	}
+
+    return;
+}

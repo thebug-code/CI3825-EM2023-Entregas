@@ -16,6 +16,8 @@ typedef struct Service_node {
 
 svc_node *new_service_list();
 u_int8_t push_service_list(svc_node **list, svc *data);
+void print_svc_list(svc_node *list);
+
 /*void print_sched_node(sched_node* sched);*/
 /*void free_sched_node(service_node** list);*/
 #endif

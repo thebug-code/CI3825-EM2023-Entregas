@@ -86,34 +86,6 @@ svc_node *ul_svc_charac(char filename[]) {
 
 
 /*
- * Imprime la lista enlazada con los servicios (rutas y 
- * horarios asociados) en un formato legible para fines
- * de depuracion.
- *
- * @param list: Puntero a la cabeza de lista de servicios
- */
-void print_svc_list(svc_node *list) {
-	while (list) {
-		sched_node *sched_s = list->data->scheds; /* Lista de horarios de la s-esima ruta */
-		printf("%s ", list->data->route);
-
-        /* Recorre la lista de horarios y los imprime */
-		while (sched_s) {
-            char st[30];
-            strftime(st, sizeof st, "%H:%M", localtime(&(sched_s->data->time)));
-			printf("%s ", st);
-			printf("%d ", sched_s->data->cap);
-
-			sched_s = sched_s->next;
-		}
-
-		printf("\n");
-		list = list->next;
-    }
-}
-
-
-/*
  * Carga el archivo de caracterizacion de la carga al sistema 
  * en un arreglo de tipo stop
  *
@@ -176,35 +148,6 @@ stop_node *ul_charac_ld_sys(char filename[]) {
     	fclose(file);
     	return stop_list;
 	}
-}
-
-
-/*
- * Imprime la lista enlazada con los datos de carga del
- * sistema (paradas de los autobuses, tiempo de recorrido
- * y numero de personas que llegan a las paradas) 
- * en un formato legible para fines de depuracion.
- *
- * @param list: Puntero a la cabeza de lista de paradas
- * de autobuses
- */
-void print_charac_ld_sys(stop_node *list) {
-	stop_node *h = list;
-
-	while (h) {
-		arrival_node *arri = h->data->arrivals;
-		printf("%s %s %d ", h->data->cod, h->data->route_name, h->data->recorr);
-
-		while (arri) {
-			printf("%d ", arri->data->n_people);
-			arri = arri->next;
-		}
-
-		printf("\n");
-		h = h->next;
-	}
-
-    return;
 }
 
 
