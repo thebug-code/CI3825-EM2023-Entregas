@@ -81,7 +81,7 @@ u_int8_t push_stop_list(stop_node **list, stop *data) {
  * @param list: Puntero a la cabeza de lista de paradas
  * de autobuses
  */
-void print_charac_ld_sys(stop_node *list) {
+void print_stop_list(stop_node *list) {
 	stop_node *h = list;
 
 	while (h) {
