@@ -179,11 +179,10 @@ void check_opt_arg(char* optarg) {
  * @param svc_list: puntero a la cabeza de la lista de servicios
  * @param stop_list: puntero a la cabeza de la lista de paradas
  * de autobuses
+ *
+ * @return float tiempo que dura un minuto en la simulacion
  */
-void read_input(int argc, char *argv[], svc_node **svc_list, stop_node **stop_list)  {
-    svc_node *svc_list_h = *svc_list;
-	stop_node *stop_list_h = *stop_list;
-
+float read_input(int argc, char *argv[], svc_node **svc_list, stop_node **stop_list)  {
     /* 
      * Variables para indicar las opciones 
      */
@@ -236,53 +235,47 @@ void read_input(int argc, char *argv[], svc_node **svc_list, stop_node **stop_li
     /* Verifica que la opcion -s fue ingresada */
     if (!sflag) { 
         printf("./simutransusb: Option s is required.\n");
-		printf(USAGE);
+	printf(USAGE);
         exit(EXIT_FAILURE);
     }
 
    /*
     * Carga la caracterizacion del servicio en una lista enlazada
     */
-    svc_list_h = ul_svc_charac(svalue);
-    /* print_svc_list(svc_list); */
+    *svc_list = ul_svc_charac(svalue);
 
    /*
     * Carga la caracterizacion de carga del sistema en una lista
-    * enlazada FALTA VERIFICAR
+    * enlazada
     */
-	stop_list_h = ul_charac_ld_sys(cvalue);
-	/* print_charac_ld_sys(stop_list); */
+    if (!cflag)
+        *stop_list = ul_charac_ld_sys("carga.csv");
+    else
+        *stop_list = ul_charac_ld_sys(cvalue);
+    
+    /* Verifica que la opcion -t fue ingresada y retorna el tiempo */
+    if (!tflag) return 0.25;
 
-    /* printf("svalue = \"%s\"\n", svalue);
-	printf("cvalue = \"%s\"\n", cvalue);
-	printf("tvalue = \"%s\"\n", tvalue); */
-    return;
+    return atof(tvalue);
 }
 
 
 /*
- * Cuenta el numero de lineas de un archivo.
- * En caso que el archivo no exista aborta el proceso.
+ * Cuenta el numero de rutas que hay en la lista de caracterizacion
+ * del servicio.
  *
- * @param filename: Ruta del archivo
+ * @param svc_list: Puntero a la cabeza de la lista de caracterizacion
+ * del servicio.
  */
-int n_lines(char filename[]) {
-	FILE *fp = fopen(filename, "r"); /* Apuntador a archivo */
-	char ch; /* Caracteres de la i-esima linea del archivo */
-	int cont = 0; /* Counter loop */
+int count_routes(svc_node *svc_list) {
+    int cont = 0;
 
-	if (!fp) {
-		perror("no such file");
-        exit(EXIT_FAILURE);
+    while (svc_list) {
+        cont++;
+        svc_list = svc_list->next;
     }
 
-    /* Extrae caracteres del archivo y los almacena en ch */
-	while((ch = fgetc(fp)) != EOF)
-        if (ch == '\n') cont++;
-
-    fclose(fp);
-
-	return cont;
+    return cont;
 }
 
 
