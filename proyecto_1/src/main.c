@@ -16,7 +16,6 @@
 typedef struct Arg_struct {
     int bus_id; /* Identificador del autobús */ 
     int *fd; /* Arreglo de descriptores de archivo */
-    pthread_mutex_t *mutex; /* Apuntador al mutex compartido */
     svc_node *arg1; /* Apuntador a la cabeza de la lista de servicios */
     stop_node *arg2; /* Apuntador a la cabeza de la lista de paradas */
 } args;
@@ -27,14 +26,12 @@ typedef struct Arg_struct {
  *
  * @param bus_id Identificador del autobús
  * @param fd Arreglo de descriptores de archivo
- * @param mutex Apuntador al mutex compartido
  * @param svc_list Apuntador a la cabeza de la lista de servicios
  * @param stop_list Apuntador a la cabeza de la lista de paradas
  * @return Apuntador a la estructura args
  */
 args *create_new_args(int bus_id, 
                       int *fd, 
-                      pthread_mutex_t *mutex,
                       svc_node *svc_list,
                       stop_node *stop_list)
 {
@@ -47,7 +44,6 @@ args *create_new_args(int bus_id,
 
     new_args->bus_id = bus_id;
     new_args->fd = fd;
-    new_args->mutex = mutex;
     new_args->arg1 = svc_list;
     new_args->arg2 = stop_list;
 
@@ -64,17 +60,13 @@ void *simulate_bus_route(void *arg) {
     args *info = (args *) arg;
     int bus_id = info->bus_id;
     int *fd = info->fd;
-    pthread_mutex_t *mutex = info->mutex;
 
-    pthread_mutex_lock(mutex); /* Bloquea el mutex */
     close(fd[READ_END]); /* Cierra el extremo de lectura no utilizado */
 
     /* Escribe un mensaje en el pipe */
     char message[MESSAGE_SIZE];
     sprintf(message, "Hola, soy el hilo %lu\n", pthread_self());
     write(fd[WRITE_END], message, sizeof(message));
-
-    pthread_mutex_unlock(mutex); /* Desbloquea el mutex */
 
     pthread_exit(NULL);
 }
@@ -96,13 +88,6 @@ int main(int argc, char *argv[]) {
 
     /* Inicializa el arreglo de pipes */
     int **pipefd = initialize_pipes(num_routes);
-
-    /* Inicializa el mutex para sincronizar escritura en el pipe */
-    pthread_mutex_t *mutex = malloc(sizeof(pthread_mutex_t));
-    if (pthread_mutex_init(mutex, NULL)) {
-        perror("pthread_mutex_init");
-        exit(EXIT_FAILURE);
-    }
 
     /* Variables para el manejo de tiempo de la simulación */
     int sim_time = 28800; /* 8 horas de servicio en segundos */
@@ -134,20 +119,17 @@ int main(int argc, char *argv[]) {
             /* Crear el hilo y ejecutar la función simulate_bus_route */
             pthread_t bus_thread_id;
             if (pthread_create(&bus_thread_id, NULL, simulate_bus_route, 
-                create_new_args(i, pipefd[i], mutex, svc_list, stop_list))) {
+                create_new_args(i, pipefd[i], svc_list, stop_list))) {
                 perror("pthread_create");
                 exit(EXIT_FAILURE);
             }
 
-            pthread_mutex_lock(mutex); /* Bloquear el mutex */
             close(pipefd[i][READ_END]); /* Cerrar el extremo de lectura no utilizado */
 
             /* Escribir un mensaje en el pipe */ 
             char message[MESSAGE_SIZE];
             sprintf(message, "Hola, soy el proceso hijo %d", i);
             write(pipefd[i][WRITE_END], message, sizeof(message));
-
-            pthread_mutex_unlock(mutex); /* Desbloquear el mutex */
 
             /* Espera a que termine el hilo */
             if (pthread_join(bus_thread_id, NULL)) {
@@ -160,7 +142,6 @@ int main(int argc, char *argv[]) {
         } else {
             /* Proceso padre */
             
-            pthread_mutex_lock(mutex); /* Bloquear el mutex */
             close(pipefd[i][WRITE_END]); /* Cerrar el extremo de escritura no utilizado */
 
             /* Leer el mensaje enviado por el proceso hijo */
