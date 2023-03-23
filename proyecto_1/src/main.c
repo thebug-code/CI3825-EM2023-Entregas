@@ -19,10 +19,14 @@ int nanosleep(const struct timespec *req, struct timespec *rem);
 
 /* Estructura para almacenar los argumentos de la función simulate_bus_route */
 typedef struct Arg_struct {
-    int bus_id; /* Identificador del autobús */ 
+    int bus_id; /* Identificador del autobús */
+    char *route_name; /* Nombre de la ruta */
+    int min_duration; /* Duración de un minuto en la simulación */
+    int counter_time; /* Contador de tiempo de la simulación */
+    int capacity; /* Capacidad del autobús */
+    int duration; /* Duración del recorrido */
+    arrival_node *arrivals; /* Lista con los horarios de llegada de las personas */
     int *fd; /* Arreglo de descriptores de archivo */
-    svc_node *arg1; /* Apuntador a la cabeza de la lista de servicios */
-    stop_node *arg2; /* Apuntador a la cabeza de la lista de paradas */
 } args;
 
 
@@ -31,15 +35,23 @@ typedef struct Arg_struct {
  * simulate_bus_route. Si hay un error, termina el programa.
  *
  * @param bus_id Identificador del autobús
+ * @param route_name Nombre de la ruta
+ * @param min_duration Duración de un minuto en la simulación
+ * @param counter_time Contador de tiempo de la simulación
+ * @param capacity Capacidad del autobús
+ * @param duration Duración del recorrido
+ * @param arrivals Lista con los horarios de llegada de las personas
  * @param fd Arreglo de descriptores de archivo
- * @param svc_list Apuntador a la cabeza de la lista de servicios
- * @param stop_list Apuntador a la cabeza de la lista de paradas
- * @return Apuntador a la estructura args
+ * @return Estructura args con los argumentos de la función
  */
 args *create_new_args(int bus_id, 
-                      int *fd, 
-                      svc_node *svc_list,
-                      stop_node *stop_list)
+                      char *route_name,
+                      int min_duration,
+                      int counter_time,
+                      int capacity,
+                      int duration,
+                      arrival_node *arrivals,
+                      int *fd)
 {
     args *new_args = (args *)malloc(sizeof(args));
 
@@ -49,9 +61,13 @@ args *create_new_args(int bus_id,
     }
 
     new_args->bus_id = bus_id;
+    new_args->route_name = route_name;
+    new_args->min_duration = min_duration;
+    new_args->counter_time = counter_time;
+    new_args->capacity = capacity;
+    new_args->duration = duration;
+    new_args->arrivals = arrivals;
     new_args->fd = fd;
-    new_args->arg1 = svc_list;
-    new_args->arg2 = stop_list;
 
     return new_args;
 }
@@ -88,15 +104,75 @@ time_t create_hour(int hour, int min, int sec) {
  * @param arg Apuntador a la estructura args
  */
 void *simulate_bus_route(void *arg) {
-    args *info = (args *) arg;
+    args *info = (args *) arg; /* Obtiene los argumentos */
+    
+    /* Extrae los argumentos de la estructura args */
     char message[MESSAGE_SIZE];
     int bus_id = info->bus_id;
+    char *route_name = info->route_name;
+    int min_duration = info->min_duration;
+    int counter_time = info->counter_time;
+    int capacity = info->capacity;
+    int duration = info->duration;
+    arrival_node *arrivals = info->arrivals;
     int *fd = info->fd;
+
+    int recorr = 0; /* Tiempo de recorrido del autobús */
+    int min_duration_n; /* Duración de un minuto en nanosegundos */
+    int sim_duration_seg; /* Duración de la simulación en segundos */
+    int sim_duration_n; /* Duración de la simulación en nanosegundos */
+    struct timespec ts; /* Estructura para simular el paso del tiempo */
 
     close(fd[READ_END]); /* Cierra el extremo de lectura no utilizado */
 
     /* Escribe un mensaje en el pipe */
-    sprintf(message, "Bus %d: Hello world!", bus_id);
+    sprintf(message, "Hola soy el autobus %d y estoy yendo a la parada %s",
+            bus_id, route_name);
+    write(fd[WRITE_END], message, sizeof(message));
+    
+
+    /* Simula el recorrido de ida hacia la parada */
+    while (recorr < duration) {
+        /* Simula el paso del tiempo */
+        ts.tv_sec = min_duration;
+        ts.tv_nsec = 0;
+        nanosleep(&ts, NULL);
+        
+        /* Incrementa el contador de tiempo */
+        recorr++;
+        counter_time++;
+    }
+
+    /* Escribe un mensaje en el pipe */
+    sprintf(message, "Hola soy el autobus %d y ya llegue a la parada %s",
+            bus_id, route_name);
+    write(fd[WRITE_END], message, sizeof(message));
+
+    /* Carga a los pasajeros FALTA */
+    min_duration_n = min_duration * 1000000000;
+    sim_duration_seg = 10 * min_duration;
+    sim_duration_n =  (10 * min_duration - sim_duration_seg) * min_duration_n; 
+
+    ts.tv_sec = sim_duration_seg; 
+    ts.tv_nsec = sim_duration_n;
+    nanosleep(&ts, NULL);
+
+    counter_time += 10;
+
+    /* Simula el recorrido de regreso hacia la universidad */
+    while (recorr > 0) {
+        /* Simula el paso del tiempo */
+        ts.tv_sec = min_duration;
+        ts.tv_nsec = 0;
+        nanosleep(&ts, NULL);
+        
+        /* Incrementa el contador de tiempo */
+        recorr--;
+        counter_time++;
+    }
+
+    /* Escribe un mensaje en el pipe */
+    sprintf(message, "Hola soy el autobus %d y ya regrese a la universidad", bus_id);
     write(fd[WRITE_END], message, sizeof(message));
 
     pthread_exit(NULL);
@@ -110,7 +186,7 @@ void *simulate_bus_route(void *arg) {
  * @param sim_counter Contador de tiempo de la simulación
  * @return Tiempo actual de la simulación
  */
-time_t get_current_time(time_t start_time, size_t sim_counter) {
+time_t get_current_time(time_t start_time, int sim_counter) {
     struct tm *current_time;
     time_t current_time_t;
 
@@ -144,8 +220,8 @@ int main(int argc, char *argv[]) {
     int **pipefd = initialize_pipes(num_routes);
 
     /* Variables para el manejo de tiempo de la simulación */
-    size_t sim_time = 480; /* 8 horas de servicio en minutos */
-    size_t sim_counter = 0; /* contador de tiempo (en mins) de la simulación */
+    int sim_time = 480; /* 8 horas de servicio en minutos */
+    int sim_counter = 0; /* contador de tiempo (en mins) de la simulación */
     
     /* Inicializa la hora de inicio del servicio a las 4:10 */
     time_t start_time = create_hour(4, 10, 0);
@@ -164,8 +240,10 @@ int main(int argc, char *argv[]) {
 
             /* id del autobús */
             int j = 0;
-            /* Puntero a la lista de horarios de los k-esimo autobuses */
-            sched_node *sched_list = svc_list->data->scheds;
+            /* Puntero al nodo con el horario del k-esimo bus de la i-esima ruta */
+            sched_node *sched_k = svc_list->data->scheds;
+            /* Puntero al nodo con la inf de llegada de la parada de la i-esima ruta */
+            arrival_node *arrival_k = stop_list->data->arrivals;
 
             /* Inicio de la simulacion */
             while (sim_counter < sim_time) {
@@ -175,12 +253,15 @@ int main(int argc, char *argv[]) {
 
                 /* Obtiene el tiempo actual de la simulación */
                 current_time = get_current_time(start_time, sim_counter);
-                if (!difftime(current_time, sched_list->data->time)) {
+                if (!difftime(current_time, sched_k->data->time)) {
                     /* Si el tiempo actual es igual al tiempo de salida del autobús */
                     /* Crea un hilo para simular el recorrido del autobús */
+                    args *bus_info = create_new_args(j, svc_list->data->route,        
+                        min_duration, sim_counter, sched_k->data->cap,
+                        stop_list->data->recorr, arrival_k, pipefd[i]);                     
                     pthread_t bus_thread_id;
                     if (pthread_create(&bus_thread_id, NULL, simulate_bus_route, 
-                        create_new_args(j, pipefd[i], svc_list, stop_list))) {
+                        (void *) bus_info)) {
                         perror("pthread_create");
                         exit(EXIT_FAILURE);
                     }
@@ -199,13 +280,13 @@ int main(int argc, char *argv[]) {
                     }
 
                     /* Avanza al siguiente horario */
-                    sched_list = sched_list->next;
+                    sched_k = sched_k->next;
                     j++;
                 }
 
                 /* Simula el paso del tiempo */
-                ts.tv_sec = 0;
-                ts.tv_nsec = min_duration * 1000; /* min_duration en microsegundos */
+                ts.tv_sec = min_duration;
+                ts.tv_nsec = 0; 
                 nanosleep(&ts, NULL);
                 
                 /* Incrementa el contador de tiempo de la simulación */
