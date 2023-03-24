@@ -267,7 +267,7 @@ float read_input(int argc, char *argv[], svc_node **svc_list, stop_node **stop_l
  * @param hour Hora
  * @param min Minuto
  * @param sec Segundo
- * @return Estructura tm con la hora especificada
+ * @return time_t estructura tm con la hora especificada
  */
 time_t create_hour(int hour, int min, int sec) {
     time_t t;

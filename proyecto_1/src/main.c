@@ -74,31 +74,6 @@ args *create_new_args(int bus_id,
 
 
 /*
- * Crea una estructura tm con la hora actual y la modifica
- * para que tenga la hora, minuto y segundo especificados.
- *
- * @param hour Hora
- * @param min Minuto
- * @param sec Segundo
- * @return Estructura tm con la hora especificada
- */
-time_t create_hour(int hour, int min, int sec) {
-    time_t t;
-    struct tm *time_info;
-
-    t = time(NULL);
-    time_info = localtime(&t);
-
-    time_info->tm_hour = hour;
-    time_info->tm_min = min;
-    time_info->tm_sec = sec;
-    t = mktime(time_info);
-
-    return t;
-}
-
-
-/*
  * Simula el recorrido de un autobús por una ruta.
  *
  * @param arg Apuntador a la estructura args
@@ -149,6 +124,7 @@ void *simulate_bus_route(void *arg) {
     write(fd[WRITE_END], message, sizeof(message));
 
     /* Carga a los pasajeros */
+    
     min_duration_n = min_duration * 1000000000;
     sim_duration_seg = 10 * min_duration;
     sim_duration_n =  (10 * min_duration - sim_duration_seg) * min_duration_n; 
