@@ -148,7 +148,7 @@ void *simulate_bus_route(void *arg) {
             bus_id, route_name);
     write(fd[WRITE_END], message, sizeof(message));
 
-    /* Carga a los pasajeros FALTA */
+    /* Carga a los pasajeros */
     min_duration_n = min_duration * 1000000000;
     sim_duration_seg = 10 * min_duration;
     sim_duration_n =  (10 * min_duration - sim_duration_seg) * min_duration_n; 

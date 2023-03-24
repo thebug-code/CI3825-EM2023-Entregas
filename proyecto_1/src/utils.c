@@ -261,6 +261,31 @@ float read_input(int argc, char *argv[], svc_node **svc_list, stop_node **stop_l
 
 
 /*
+ * Crea una estructura tm con la hora actual y la modifica
+ * para que tenga la hora, minuto y segundo especificados.
+ *
+ * @param hour Hora
+ * @param min Minuto
+ * @param sec Segundo
+ * @return Estructura tm con la hora especificada
+ */
+time_t create_hour(int hour, int min, int sec) {
+    time_t t;
+    struct tm *time_info;
+
+    t = time(NULL);
+    time_info = localtime(&t);
+
+    time_info->tm_hour = hour;
+    time_info->tm_min = min;
+    time_info->tm_sec = sec;
+    t = mktime(time_info);
+
+    return t;
+}
+
+
+/*
  * Cuenta el numero de rutas que hay en la lista de caracterizacion
  * del servicio.
  *
