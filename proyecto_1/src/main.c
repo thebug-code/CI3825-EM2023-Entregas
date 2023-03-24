@@ -5,8 +5,6 @@
 #include <pthread.h>
 #include <sys/wait.h>
 
-#include "schedule_list.h"
-#include "stop_list.h"
 #include "utils.h"
 
 #define READ_END 0
@@ -180,7 +178,7 @@ time_t get_current_time(time_t start_time, int sim_counter) {
 
 int main(int argc, char *argv[]) {
     /* Lee los datos de entrada y los guarda en las listas */
-    svc_node *svc_list = new_service_list();
+    svc_charac_node *svc_list = new_svc_charac_list();
     stop_node *stop_list = new_stop_list();
     float min_duration = read_input(argc, argv, &svc_list, &stop_list);
     /* Tiempo en seguntos que dura un minuto de la simulación */
@@ -217,7 +215,7 @@ int main(int argc, char *argv[]) {
             /* id del autobús */
             int j = 0;
             /* Puntero al nodo con el horario del k-esimo bus de la i-esima ruta */
-            sched_node *sched_k = svc_list->data->scheds;
+            bus_dep_time_node *sched_k = svc_list->data->scheds;
             /* Puntero al nodo con la inf de llegada de la parada de la i-esima ruta */
             arrival_node *arrival_k = stop_list->data->arrivals;
 

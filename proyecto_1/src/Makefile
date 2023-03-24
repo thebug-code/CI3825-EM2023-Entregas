@@ -6,7 +6,7 @@ CFLAGS = -Wall -pedantic
 LDLIBS = -lm
 
 # Object files to link together
-OBJ = schedule.o schedule_list.o service.o arrival_list.o arrival_schedule.o bus_stop.o service_list.o utils.o stop_list.o main.o
+OBJ = bus_departure_time.o bus_departure_time_list.o service_characterization.o service_characterization_list.o arrival_list.o arrival_schedule.o bus_stop.o  utils.o stop_list.o main.o
 
 # Default target
 all: simutransusb
@@ -16,16 +16,20 @@ simutransusb: $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LDLIBS) -o simutransusb
 
 # Compile schedule object file
-schedule.o: schedule.c schedule.h
-	$(CC) $(CFLAGS) -c schedule.c
+bus_departure_time.o: bus_departure_time.c bus_departure_time.h
+	$(CC) $(CFLAGS) -c bus_departure_time.c
 
 # Compile schedule list object file
-schedule_list.o: schedule_list.c schedule_list.h
-	$(CC) $(CFLAGS) -c schedule_list.c
+bus_departure_time_list.o: bus_departure_time_list.c bus_departure_time_list.h
+	$(CC) $(CFLAGS) -c bus_departure_time_list.c
 
 # Compile service object file
-service.o: service.c service.h
-	$(CC) $(CFLAGS) -c service.c
+service_characterization.o: service_characterization.c service_characterization.h
+	$(CC) $(CFLAGS) -c service_characterization.c
+
+# Compile service list object file
+service_characterization_list.o: service_characterization_list.c service_characterization_list.h
+	$(CC) $(CFLAGS) -c service_characterization_list.c
 
 # Compile arrival list object file
 arrival_list.o: arrival_list.c arrival_list.h
@@ -38,10 +42,6 @@ arrival_schedule.o: arrival_schedule.c arrival_schedule.h
 # Compile bus stop object file
 bus_stop.o: bus_stop.c bus_stop.h
 	$(CC) $(CFLAGS) -c bus_stop.c
-
-# Compile service list object file
-service_list.o: service_list.c service_list.h
-	$(CC) $(CFLAGS) -c service_list.c
 
 # Compile utils object file
 utils.o: utils.c utils.h

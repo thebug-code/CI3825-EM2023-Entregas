@@ -6,14 +6,13 @@
 #include <stdlib.h>
 #include "arrival_schedule.h"
 
-/*
- * Crea una structura Arrival_schedule
+
+/**
+ * Crea una nueva estructura de horarios de llegada
  *
- * @param hour: j-esima hora de la i-esima parada
- * @param people: cantidad de personas que llegan a la j-esima
- * hora a la i-esima parada
- * @return Un apuntador a Arrival_schedule si la creacion fue exitosa.
- *         NULL en caso contrario.
+ * @param hour: hora de llegada
+ * @param people: numero de personas que llegan
+ * @return un apuntador a la nueva estructura de horarios de llegada
  */
 arrival* new_arrival(int hour, int people) {
     arrival *a = malloc(sizeof(arrival));

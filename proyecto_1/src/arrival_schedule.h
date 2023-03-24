@@ -9,5 +9,13 @@ typedef struct Arrival_schedule {
     int n_people;
 } arrival;
 
+
+/**
+ * Crea una nueva estructura de horarios de llegada
+ *
+ * @param hour: hora de llegada
+ * @param people: numero de personas que llegan
+ * @return un apuntador a la nueva estructura de horarios de llegada
+ */
 arrival* new_arrival(int hour, int people);
 #endif

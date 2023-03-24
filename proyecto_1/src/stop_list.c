@@ -1,6 +1,6 @@
 /**
  * Implementaciones de funciones utiles para lista circular de las
- * paradas.
+ * paradas de autobuses.
  *
  * La lista soporta las operaciones de creacion e insercion
  */
@@ -10,8 +10,9 @@
 
 #include "stop_list.h"
 
+
 /**
- * Crea una lista doblemente enlazada sin elementos.
+ * Crea una lista doblemente enlazada de paradas de autobuses sin elementos.
  *
  * @return Un apuntador a la cabeza de la lista si la creacion fue exitosa.
  * de los contrario NULL.
@@ -33,10 +34,10 @@ stop_node *new_stop_list() {
 
 
 /**
- * Añade un svc nodo a la lista.
+ * Añade un stop nodo a la lista.
  *
  * @param list: Apuntador a la direccion de la cabeza de la lista.
- * @param data: Dato a almacenar en el nodo, de tipo svc.
+ * @param data: Dato a almacenar en el nodo, de tipo stop.
  * @return 1 si la operación fue exitosa. De lo contrario 0.
  */
 u_int8_t push_stop_list(stop_node **list, stop *data) {
@@ -72,30 +73,26 @@ u_int8_t push_stop_list(stop_node **list, stop *data) {
 }
 
 
-/*
- * Imprime la lista enlazada con los datos de carga del
- * sistema (paradas de los autobuses, tiempo de recorrido
- * y numero de personas que llegan a las paradas) 
- * en un formato legible para fines de depuracion.
+/**
+ * Imprime la lista de paradas de autobuses en un formato legible.
  *
- * @param list: Puntero a la cabeza de lista de paradas
- * de autobuses
+ * @param list: Apuntador a la cabeza de la lista.
  */
 void print_stop_list(stop_node *list) {
-	stop_node *h = list;
-
-	while (h) {
-		arrival_node *arri = h->data->arrivals;
-		printf("%s %s %d ", h->data->cod, h->data->route_name, h->data->recorr);
-
-		while (arri) {
-			printf("%d ", arri->data->n_people);
-			arri = arri->next;
-		}
-
-		printf("\n");
-		h = h->next;
-	}
+    stop_node *h = list;
+    
+    while (h) {
+        arrival_node *arri = h->data->arrivals;
+        printf("%s %s %d ", h->data->cod, h->data->route_name, h->data->recorr);
+    
+        while (arri) {
+            printf("%d ", arri->data->n_people);
+    	arri = arri->next;
+        }
+    
+        printf("\n");
+        h = h->next;
+    }
 
     return;
 }

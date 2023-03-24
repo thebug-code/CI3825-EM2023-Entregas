@@ -2,13 +2,14 @@
  * Implementaciones de funciones utiles para lista circular de los
  * horarios de llegada
  *
- * La lista soporta las operaciones de creacion, insercion, 
+ * La lista soporta las operaciones de creacion e insercion de nodos.
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "arrival_list.h"
+
 
 /**
  * Crea una lista doblemente enlazada sin elementos.
@@ -22,7 +23,7 @@ arrival_node *new_arrival_list() {
 
     if (!head)
         return NULL;
-
+    
     /* La cabeza de la lista apunta a si misma */
     head->next = NULL;
     head->prev = NULL;
@@ -68,12 +69,12 @@ u_int8_t push_arrival_list(arrival_node **list, arrival *data) {
 }
 
 
-/*
- *  Libera un nodo de la lista enlazada de horarios de llegada.
+/**
+ * Libera la memoria de la lista de horarios de llegada
  *
- *  @param item: Apuntador al nodo a liberar.
+ * @param list: apuntador a la lista de horarios de llegada
  */
-void free_arrival_list(arrival_node** list) {
+void destroy_arrival_list(arrival_node** list) {
     arrival_node *node = *list;
 
     if (!node->data) {

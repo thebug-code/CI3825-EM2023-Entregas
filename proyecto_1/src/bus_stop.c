@@ -8,15 +8,15 @@
 #include <string.h>
 #include "bus_stop.h"
 
-/*
- * Crea una structura de parada de autobuses
+
+/**
+ * Crea una nueva estructura de parada de autobus
  *
- * @param cod: puntero a char con el codigo de la parada
- * @param route_name: puntero a char con el nombre de la parada
- * @param recorr: tiempo de rrecorido desde la j_esima parada
- * hasta la USB
- * @return Un apuntador a stop si la creacion fue exitosa.
- *         Null en caso contrario.
+ * @param cod: codigo de la parada
+ * @param route_name: nombre de la ruta
+ * @param recorr: recorrido de la ruta
+ * @return un apuntador a la nueva estructura de parada de autobus.
+ *        NULL en caso contrario.
  */
 stop* new_stop(char cod[4], char route_name[50], int recorr) {
     stop *s = malloc(sizeof(stop));
