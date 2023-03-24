@@ -15,7 +15,7 @@
  * @return Un apuntador a Arrival_schedule si la creacion fue exitosa.
  *         NULL en caso contrario.
  */
-arrival* new_arrival(int hour, int people) {
+arrival* new_arrival(time_t hour, int people) {
     arrival *a = malloc(sizeof(arrival));
 
     if (!a)
