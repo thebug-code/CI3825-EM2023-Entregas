@@ -152,13 +152,13 @@ stop_node *ul_charac_ld_sys(char filename[]) {
     
             strcpy(cod, strtok(buffer, ","));
             strncpy(route_name, &strtok(NULL, ",")[1], 50);
-            recorr = atoi(strtok(NULL, ", :"))*3600 + atoi(strtok(NULL, ", :"))*60;
+            recorr = atoi(strtok(NULL, ", :")) * 60 + atoi(strtok(NULL, ", :"));
     
             n_stop = new_stop(cod, route_name, recorr);
     
             while (j < i) {
                 people = atoi(strtok(NULL, ", "));
-                arriv = new_arrival(j, people);
+                arriv = new_arrival(create_hour(j, 0, 0), people);
                 push_arrival_list(&(n_stop->arrivals), arriv);
                 j++;
             }

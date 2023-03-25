@@ -10,7 +10,7 @@
 typedef struct Bus_stop{
     char cod[4]; /* codigo de la rura */
     char route_name[50]; /*nombre largo de la ruta */
-    int recorr; /*Recorrido de la ruta en segundos */
+    int recorr; /*Recorrido de la ruta en minutos */
     arrival_node *arrivals; /* Lista con horarios asociados de la parada de la ruta */
 } stop;
 

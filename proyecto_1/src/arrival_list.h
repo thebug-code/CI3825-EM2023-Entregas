@@ -38,6 +38,16 @@ arrival_node *new_arrival_list();
 u_int8_t push_arrival_list(arrival_node **list, arrival *data);
 
 
+/**
+ * Elimina un nodo de la lista de horarios de llegada.
+ *
+ * @param list: apuntador a la lista de horarios de llegada
+ * @param data: Apuntador al nodo a eliminar.
+ * @return 0 si la eliminacion fue exitosa, 1 en caso contrario.
+ */
+u_int8_t pop_arrival_list(arrival_node **list, arrival_node *del);
+
+
 /*
  * Libera la memoria de la lista de horarios de llegada
  *

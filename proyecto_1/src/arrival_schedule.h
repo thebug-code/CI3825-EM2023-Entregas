@@ -5,7 +5,7 @@
  * Estructura de horarios de las paradas del transporte USB
  */
 typedef struct Arrival_schedule {
-    int hour;
+    time_t hour;
     int n_people;
 } arrival;
 
@@ -17,5 +17,5 @@ typedef struct Arrival_schedule {
  * @param people: numero de personas que llegan
  * @return un apuntador a la nueva estructura de horarios de llegada
  */
-arrival* new_arrival(int hour, int people);
+arrival* new_arrival(time_t hour, int people);
 #endif

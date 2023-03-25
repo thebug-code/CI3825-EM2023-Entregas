@@ -14,7 +14,7 @@
  * @param people: numero de personas que llegan
  * @return un apuntador a la nueva estructura de horarios de llegada
  */
-arrival* new_arrival(int hour, int people) {
+arrival* new_arrival(time_t hour, int people) {
     arrival *a = malloc(sizeof(arrival));
 
     if (!a)

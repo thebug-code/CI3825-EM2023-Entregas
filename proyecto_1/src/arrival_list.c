@@ -70,6 +70,39 @@ u_int8_t push_arrival_list(arrival_node **list, arrival *data) {
 
 
 /**
+ * Elimina un nodo de la lista de horarios de llegada.
+ *
+ * @param list: Apuntador a la direccion de la cabeza de la lista.
+ * @param data: Apuntador al nodo a eliminar.
+ * @return 1 si la operación fue exitosa. De lo contrario 0.
+ */
+u_int8_t pop_arrival_list(arrival_node **list, arrival_node *del) {
+    arrival_node *head = *list;
+
+    if (!head || !del || !head->data) {
+        /* Si la lista esta vacia o el nodo a eliminar no existe, no hace nada */
+        return 0;
+    } else {
+        /* Si el nodo a eliminar es el primero */
+        if (head == del)
+            *list = del->next;
+        
+        /* Si el nodo a eliminar no es el ultimo */
+        if (del->next)
+            del->next->prev = del->prev;
+
+        /* Si el nodo a eliminar no es el primero */
+        if (del->prev)
+            del->prev->next = del->next;
+
+        free(del);
+    }
+
+    return 1;
+}
+
+
+/**
  * Libera la memoria de la lista de horarios de llegada
  *
  * @param list: apuntador a la lista de horarios de llegada
