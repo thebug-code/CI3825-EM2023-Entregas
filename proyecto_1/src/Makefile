@@ -1,12 +1,12 @@
 # Compiler to use
 CC = gcc
 # Compiler flags
-CFLAGS = -Wall -pedantic
+CFLAGS = -Wall -pthread -pedantic
 # Libraries to link with
 LDLIBS = -lm
 
 # Object files to link together
-OBJ = bus_departure_time.o bus_departure_time_list.o service_characterization.o service_characterization_list.o arrival_list.o arrival_schedule.o bus_stop.o  utils.o stop_list.o main.o
+OBJ = bus_departure_time.o bus_departure_time_list.o service_characterization.o service_characterization_list.o arrival_list.o arrival_schedule.o bus_stop.o  utils.o stop_list.o simula_bus.o main.o
 
 # Default target
 all: simutransusb
@@ -50,6 +50,10 @@ utils.o: utils.c utils.h
 # Compile stop list object file
 stop_list.o: stop_list.c stop_list.h
 	$(CC) $(CFLAGS) -c stop_list.c
+
+# Compile simula bus object file
+simula_bus.o: simula_bus.c simula_bus.h
+	$(CC) $(CFLAGS) -c simula_bus.c
 
 # Compile main object file
 main.o: main.c
