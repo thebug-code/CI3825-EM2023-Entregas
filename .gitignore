@@ -57,6 +57,9 @@ dkms.conf
 
 # Directories
 directorio
+orange_islands
+johto
+kanto
 
 # Ejecutable
 simutransusb
