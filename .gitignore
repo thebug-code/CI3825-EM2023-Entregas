@@ -54,3 +54,11 @@ dkms.conf
 # Files
 *.csv
 *.txt
+
+# Directories
+directorio
+
+# Ejecutable
+simutransusb
+twitter
+fameChecker
