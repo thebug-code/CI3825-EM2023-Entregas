@@ -8,7 +8,7 @@ CFLAGS = -Wall -pedantic
 LDLIBS = -lm
 
 # Object files to link together
-OBJ = main.o cli_parser.o
+OBJ = main.o cli_parser.o directory_parser.o
 
 # Default target
 all: fameChecker
@@ -20,6 +20,10 @@ fameChecker: $(OBJ)
 # Compile cli_parser object file
 cli_parser.o: cli_parser.c cli_parser.h
 	$(CC) $(CFLAGS) -c cli_parser.c
+
+# Compile directory_parser object file
+directory_parser.o: directory_parser.c directory_parser.h
+	$(CC) $(CFLAGS) -c directory_parser.c
 
 # Compile main object file
 main.o: main.c
