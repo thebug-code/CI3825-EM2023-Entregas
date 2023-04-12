@@ -72,11 +72,11 @@ void handle_cli_args(int argc, char *argv[], options_t *opts) {
     while ((opt = getopt_long(argc, argv, short_options, long_options, NULL)) != -1) {
         switch (opt) {
             case 'r':
-                sflag = 1;
+                rflag = 1;
                 rvalue = optarg;
                 break;
             case 's':
-                cflag = 1;
+                sflag = 1;
                 svalue = optarg;
                 break;
             case 't':

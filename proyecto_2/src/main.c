@@ -13,15 +13,11 @@
 
 int main(int argc, char* argv[]) {
 
-    
     options_t *opts = (options_t*)malloc(sizeof(options_t));
     handle_cli_args(argc, argv, opts);
 
-
-    traverse_directory_dfs(opts->region, opts->species, opts->appear_type);
-
-
-    
+    traverse_directory_dfs(opts->region, opts->species, opts->appear_type, opts->nocount,
+        opts->list, opts->size, argv[optind]);
 
     return 0;
 }
