@@ -33,7 +33,14 @@ int inode_traversal(char* rut, int list, int size, char* name);
  * @size size Indica si se debe mostrar el numero de archivos encontrados
  * @param name Indica si se debe restringir la busqueda de los archivos
  */
-int traverse_directory_dfs(char* rut1, char* rut2, char* rut3, int nocount,
-    int list, int size, char* name);
+int traverse_directory_dfs(
+    char* rut1,
+    char* rut2,
+    char* rut3,
+    int nocount,
+    int list,
+    int size,
+    char* name
+);
 
 #endif

@@ -54,7 +54,7 @@ void handle_cli_args(int argc, char *argv[], options_t *opts) {
         {"nocount", no_argument, 0, 'c'},
         {"list",    no_argument, 0, 'l'},
         {"size",    no_argument, 0, 'z'},
-        {0,         0,           0, 0}
+        {0,         0,           0,  0 }
     };
 
     /* 
