@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <getopt.h>
+#include <getopt.h> /* Para el parseo de argumentos de la línea de comandos */
 
 
 /*
@@ -107,15 +107,11 @@ void handle_cli_args(int argc, char *argv[], options_t *opts) {
     if (optind < argc)
         name = argv[optind];
 
-    /* Ignorar la advertencia de variable no utilizada para 'nombre' */
+    /* Ignorar la advertencia de las posibles variables no usadas */
     (void)name;
-
-    /* Verifica que se haya especificado al menos una opción (ojo falta) */
-    if (!rflag && !sflag && !tflag && !cflag && !lflag && !zflag) {
-        fprintf(stderr, "You must specify at least one option.\n");
-        print_usage(argv[0]);
-        exit(EXIT_FAILURE);
-    }
+    (void)tflag;
+    (void)sflag;
+    (void)rflag;
 
     /* Guarda los argumentos en la estructura de opciones */
     opts->region = rvalue;

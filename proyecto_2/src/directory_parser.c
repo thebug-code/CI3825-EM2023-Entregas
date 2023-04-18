@@ -7,10 +7,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/types.h> /* Para el tipo de dato DIR */
+#include <sys/types.h> /* Para colección de estructuras y símbolos typedef */
 #include <dirent.h>    /* Para el tipo de dato DIR */
 #include <sys/stat.h>  /* Para el tipo de dato struct stat */
-#include <unistd.h>    /* Para el tipo de dato off_t */
+#include <unistd.h>    /* Proporciona acceso a la API del sistema operativo POSIX */
 
 /*
  * Imprime los archivos encontrados
