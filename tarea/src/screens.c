@@ -11,6 +11,7 @@
 #include "hash_table.h"
 #include "user_list.h"
 
+
 /* Pantalla principal del usuario. Se encarga de verificar si las 
  * opciones ingresadas son validas y de mostrar las demas pantallas.
  */
@@ -38,10 +39,11 @@ void screen1(user_node **hash_table) {
         return;
     }
     else {
-        printf("\nEntrada erronea. Por favor ingrese una opcion valida\n");
+        printf("\nEntrada errónea. Por favor ingrese una opción válida\n");
         screen1(hash_table);
     }
 }
+
 
 /* Segunda pantalla del usaurio. Se encarga de loguear un usuario y de mostrar
  * su timeline.
@@ -56,7 +58,7 @@ void screen2(user_node **hash_table) {
     /* Verificar si el login es valido */
     struct_user = get_user(hash_table, username);
     if (!struct_user || struct_user->hash_password != hash_code(password)) {
-        printf("El usuario o la contrasena son incorrectos\n");
+        printf("El usuario o la contraseña son incorrectos\n");
     }
     else {
         /* Mostrar timeline del usuario */
@@ -65,6 +67,7 @@ void screen2(user_node **hash_table) {
     }
     return;
 }
+
 
 /* Tercera pantalla del usuario. Ofrece las opciones de anadidura
  * de tweet, ir a un perfil, follow (si aplica) y de cerrar sesion.
@@ -89,7 +92,7 @@ void screen3(user_node **hash_table, user **u, user *to_user) {
         clear_input_buffer(&str_tw);
         add_tweet(&struct_user, str_tw);
 
-        printf("\nSu tweet fue anadido con exito\n");
+        printf("\nSu tweet fue añadido con exito\n");
 
         screen3(hash_table, u, NULL);
     }
@@ -110,7 +113,7 @@ void screen3(user_node **hash_table, user **u, user *to_user) {
         }
         else {
             /* Mostrar tweet del usuario */
-            printf("\nDescripcion: %s\n\n", stalkear_user->description);
+            printf("\nDescripción: %s\n\n", stalkear_user->description);
             show_tweet_list(stalkear_user->tweet_list, stalkear_user->username);
             screen3(hash_table, u, stalkear_user);
         }
@@ -132,13 +135,14 @@ void screen3(user_node **hash_table, user **u, user *to_user) {
         return;
     }
     else {
-        printf("\nEntrada erronea. Por favor ingrese una opcion valida\n");
+        printf("\nEntrada errónea. Por favor ingrese una opción valida\n");
 
         /* Verificar si se esta estalkeando a un usuaio */
         if (to_user) screen3(hash_table, u, to_user);
         else screen3(hash_table, u, NULL);
     }
 }
+
 
 /* Cuarta pantalla del usuario. Se encarga de registrar un usuario.
  */
@@ -161,6 +165,7 @@ void screen4(user_node **hash_table) {
     return;
 }
 
+
 /*
  * Anade un nuevo tweet al struct del usuario.
  *
@@ -173,6 +178,7 @@ void add_tweet(user **u, char *str_tw) {
     push_tweet_list(&struct_user->tweet_list, new_tweet(str_tw, time(NULL))); 
     return;
 }
+
 
 /*
  * Pide por input standard el usuario y la contrasena.
@@ -198,6 +204,7 @@ void read_user_and_pass(char **u, char **p) {
     return; 
 }
 
+
 /*
  * Pide por input standard la descripcion del perfil del usuario.
  *
@@ -212,7 +219,10 @@ void put_description(char **d) {
     printf("\n");
 }
 
-/* Remove trailing newline, if there. */
+
+/*
+ * Remueve el caracter '\n' de una cadena de caracteres.
+ */
 u_int8_t clear_string(char **s) {
     char *input = *s;
     if (strlen(input) > 0 && input[strlen(input) - 1] == '\n') {
@@ -222,6 +232,7 @@ u_int8_t clear_string(char **s) {
     return 0;
 }
 
+
 /*
  * Limpia el bufer de entrada luego de usar fgets().
  *
@@ -230,7 +241,7 @@ u_int8_t clear_string(char **s) {
  */
 void clear_input_buffer(char** input) {
     if (clear_string(input)) return;
-    else while(fgetc(stdin) != '\n') continue; /* discard until newline */
+    else while(fgetc(stdin) != '\n') continue; /* descartar el resto de la linea */
 
     return;
 }
